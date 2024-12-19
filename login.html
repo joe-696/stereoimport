@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-O+IT6IXFbqv7+TQ1rNqpAUuaNCWyBO6UVBd8i4OhS9nF6VfT8GNdTu5/c1LsiBfFl8J7LblrBYHY/u3XfHOo9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #4a5568;
+            color: #fff;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .add-product {
+            margin-bottom: 2rem;
+        }
+
+        .add-product h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="file"],
+        .form-group textarea,
+        .form-group select { /* Agregado select */
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="file"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus { /* Agregado select */
+            outline: none;
+            border-color: #3182ce;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .imgbb-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .imgbb-upload img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 0.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        #addProductBtn {
+            background: #3182ce;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        #addProductBtn:hover {
+            background: #2c5282;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .product-table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        table th, table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #cbd5e0;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-buttons .edit-btn,
+        .action-buttons .delete-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .action-buttons .edit-btn {
+            background: #38a169;
+        }
+
+        .action-buttons .edit-btn:hover {
+            background: #2f855a;
+        }
+
+        .action-buttons .delete-btn {
+            background: #e53e3e;
+        }
+
+        .action-buttons .delete-btn:hover {
+            background: #c53030;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right:0;
+            bottom:0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content:center;
+            align-items:center;
+            z-index: 10000;
+            padding: 1rem;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background:#fff;
+            padding:2rem;
+            border-radius:8px;
+            max-width:500px;
+            width:100%;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+            text-align: center;
+        }
+
+        .modal-content .form-group {
+            margin-bottom:1rem;
+        }
+
+        .modal-content .form-group input[type="text"],
+        .modal-content .form-group input[type="number"],
+        .modal-content .form-group textarea,
+        .modal-content .form-group select { /* Agregado select */
+            width: 100%;
+        }
+
+        .modal-content button {
+            background: #3182ce;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .modal-content button:hover {
+            background: #2c5282;
+        }
+
+        .close-modal {
+            background: #a0aec0;
+            color:#fff;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            border: none;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: #718096;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .edit-btn,
+            .action-buttons .delete-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Panel de Administración</h1>
+    </header>
+    <!-- Botón para Ver mis Productos -->
+    <div style="text-align: center; margin-bottom: 1rem;">
+        <button id="viewProductsBtn" style="
+            background: #ff5722;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        ">
+            Ver mis productos
+        </button>
+    </div>
+
+
+    <div class="container">
+        <!-- Sección para Agregar Producto -->
+        <div class="add-product">
+            <h2>Agregar Producto</h2>
+
+            <!-- Marca/Línea -->
+            <div class="form-group">
+                <label for="productSagitario"><i class="fas fa-tag"></i> Marca/Línea:</label>
+                <input type="text" id="productSagitario" placeholder="Ej: JBL, XIAOMI..." required/>
+            </div>
+
+            <!-- Título -->
+            <div class="form-group">
+                <label for="productTitle"><i class="fas fa-heading"></i> Título:</label>
+                <input type="text" id="productTitle" placeholder="Ej: Audífono Inalámbrico X" required/>
+            </div>
+
+            <!-- Descripción (textarea para multilinea) -->
+            <div class="form-group">
+                <label for="productDescripcion"><i class="fas fa-info-circle"></i> Descripción (multilínea):</label>
+                <textarea id="productDescripcion" placeholder="Ej: Audífono con cancelación de ruido...\n. Punto y seguido crea un ítem de lista\nPuedes usar saltos de línea también"></textarea>
+            </div>
+
+            <!-- Precio -->
+            <div class="form-group">
+                <label for="productPrecio"><i class="fas fa-dollar-sign"></i> Precio:</label>
+                <input type="number" step="0.01" id="productPrecio" placeholder="Ej: 45.00" required/>
+            </div>
+
+            <!-- Precio Promocional (Opcional) -->
+            <div class="form-group">
+                <label for="productPromocionalPrecio"><i class="fas fa-percentage"></i> Precio Promocional (opcional):</label>
+                <input type="number" step="0.01" id="productPromocionalPrecio" placeholder="Ej: 40.00"/>
+            </div>
+
+            <!-- Categoría (Nuevo Campo) -->
+            <div class="form-group">
+                <label for="productCategoria"><i class="fas fa-list"></i> Categoría:</label>
+                <select id="productCategoria" required>
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option value="Parlantes">Parlantes</option>
+                    <option value="Fundas para parlantes">Fundas para parlantes</option>
+                    <option value="Audífonos">Audífonos</option>
+                    <option value="Funda para audífonos">Funda para audífonos</option>
+                    <option value="Almohadillas para audífonos">Almohadillas para audífonos</option>
+                    <option value="Fundas para Amazon Kindle">Fundas para Amazon Kindle</option>
+                </select>
+            </div>
+
+            <!-- Imagen -->
+            <div class="form-group imgbb-upload">
+                <label><i class="fas fa-image"></i> Seleccionar Imagen:</label>
+                <input type="file" id="imgFile" accept="image/*">
+                <img id="imgPreview" alt="Previsualización Imagen"/>
+            </div>
+
+            <button id="addProductBtn"><i class="fas fa-plus-circle"></i> Agregar Producto</button>
+            <div id="errorMessage" class="error-message" style="display:none;"></div>
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="product-table-container">
+            <h2>Lista de Productos</h2>
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Marca/Línea</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Promocional</th>
+                        <th>Categoría</th> <!-- Nueva Columna -->
+                        <th>Imagen</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí se mostrarán los productos -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Toast para mensajes -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Modal de Edición -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeEditModalBtn">&times;</button>
+            <h3>Editar Producto</h3>
+
+            <div class="form-group">
+                <label for="editSagitario"><i class="fas fa-tag"></i> Marca/Línea:</label>
+                <input type="text" id="editSagitario"/>
+            </div>
+            <div class="form-group">
+                <label for="editTitle"><i class="fas fa-heading"></i> Título:</label>
+                <input type="text" id="editTitle"/>
+            </div>
+            <div class="form-group">
+                <label for="editDescripcion"><i class="fas fa-info-circle"></i> Descripción (multilínea):</label>
+                <textarea id="editDescripcion"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editPrecio"><i class="fas fa-dollar-sign"></i> Precio:</label>
+                <input type="number" step="0.01" id="editPrecio"/>
+            </div>
+            <div class="form-group">
+                <label for="editPromocionalPrecio"><i class="fas fa-percentage"></i> Precio Promocional (opcional):</label>
+                <input type="number" step="0.01" id="editPromocionalPrecio"/>
+            </div>
+            <!-- Categoría en Modal de Edición -->
+            <div class="form-group">
+                <label for="editCategoria"><i class="fas fa-list"></i> Categoría:</label>
+                <select id="editCategoria" required>
+                    <option value="" disabled>Selecciona una categoría</option>
+                    <option value="Parlantes">Parlantes</option>
+                    <option value="Fundas para parlantes">Fundas para parlantes</option>
+                    <option value="Audífonos">Audífonos</option>
+                    <option value="Funda para audífonos">Funda para audífonos</option>
+                    <option value="Almohadillas para audífonos">Almohadillas para audífonos</option>
+                    <option value="Fundas para Amazon Kindle">Fundas para Amazon Kindle</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editImagen"><i class="fas fa-image"></i> Imagen (URL):</label>
+                <input type="text" id="editImagen"/>
+            </div>
+
+            <button id="saveChangesBtn"><i class="fas fa-save"></i> Guardar Cambios</button>
+            <button id="cancelEditBtn" class="close-modal"><i class="fas fa-times"></i> Cancelar</button>
+        </div>
+    </div>
+    <script>
+        const viewProductsBtn = document.getElementById('viewProductsBtn');
+        viewProductsBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+    </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+            authDomain: "sagitariojbl1.firebaseapp.com",
+            projectId: "sagitariojbl1",
+            storageBucket: "sagitariojbl1.firebasestorage.app",
+            messagingSenderId: "424267774202",
+            appId: "1:424267774202:web:0be71a6adeacfe434f3143",
+            measurementId: "G-GGHQL53GT3"
+        };
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        const productSagitarioInput = document.getElementById('productSagitario');
+        const productTitleInput = document.getElementById('productTitle');
+        const productDescripcionInput = document.getElementById('productDescripcion');
+        const productPrecioInput = document.getElementById('productPrecio');
+        const productPromocionalPrecioInput = document.getElementById('productPromocionalPrecio');
+        const productCategoriaInput = document.getElementById('productCategoria'); // Nuevo Campo
+        const addProductBtn = document.getElementById('addProductBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const toast = document.getElementById('toast');
+        const productTableBody = document.querySelector('#productTable tbody');
+
+        const editModal = document.getElementById('editModal');
+        const editSagitario = document.getElementById('editSagitario');
+        const editTitle = document.getElementById('editTitle');
+        const editDescripcion = document.getElementById('editDescripcion');
+        const editPrecio = document.getElementById('editPrecio');
+        const editPromocionalPrecio = document.getElementById('editPromocionalPrecio');
+        const editCategoria = document.getElementById('editCategoria'); // Nuevo Campo
+        const editImagen = document.getElementById('editImagen');
+        const saveChangesBtn = document.getElementById('saveChangesBtn');
+        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+        const imgFileInput = document.getElementById('imgFile');
+        const imgPreview = document.getElementById('imgPreview');
+
+        let products = [];
+        let currentEditId = null;
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function loadProducts() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                products = [];
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    products.push({...data, id: docSnap.id});
+                });
+                renderProductTable();
+            } catch (error) {
+                console.error("Error al cargar productos:", error);
+                showToast("Error al cargar productos.");
+            }
+        }
+
+        function renderProductTable() {
+            productTableBody.innerHTML = '';
+            products.forEach((prod) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${prod.sagitario}</td>
+                    <td>${prod.title}</td>
+                    <td style="white-space:pre-wrap;">${prod.description}</td>
+                    <td>$${prod.price.toFixed(2)}</td>
+                    <td>${prod.promotionalPrice ? '$' + prod.promotionalPrecio.toFixed(2) : ''}</td>
+                    <td>${prod.category}</td> <!-- Nueva Columna -->
+                    <td>${prod.image ? `<img src="${prod.image}" alt="Imagen" style="height:40px;">` : ''}</td>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="${prod.id}"><i class="fas fa-edit"></i> Editar</button>
+                        <button class="delete-btn" data-id="${prod.id}"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                    </td>
+                `;
+                productTableBody.appendChild(tr);
+            });
+
+            productTableBody.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    openEditModal(id);
+                });
+            });
+
+            productTableBody.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    deleteProduct(id);
+                });
+            });
+        }
+
+        imgFileInput.addEventListener('change', () => {
+            const file = imgFileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imgPreview.style.display = 'none';
+            }
+        });
+
+        addProductBtn.addEventListener('click', async () => {
+            const sagitario = productSagitarioInput.value.trim();
+            const title = productTitleInput.value.trim();
+            const description = productDescripcionInput.value.trim();
+            const precio = parseFloat(productPrecioInput.value.trim());
+            const promocionalPrecio = parseFloat(productPromocionalPrecioInput.value.trim());
+            const categoria = productCategoriaInput.value; // Obtener categoría
+
+            if (!sagitario || !title || !description || isNaN(precio) || precio <= 0 || !categoria) { // Validar categoría
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "Por favor, completa todos los campos con datos válidos (excepto el promocional que es opcional).";
+                return;
+            } else {
+                errorMessage.style.display = 'none';
+            }
+
+            let imageUrl = "";
+
+            const imageFile = imgFileInput.files[0];
+            if (imageFile) {
+                try {
+                    const formData = new FormData();
+                    const apiKey = '372dd6dc556299357a3f928d1c8b053f';
+                    formData.append('image', imageFile);
+
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        imageUrl = data.data.url;
+                    } else {
+                        throw new Error("Error en la subida de la imagen.");
+                    }
+                } catch (error) {
+                    console.error('Error al subir la imagen:', error);
+                    showToast('Hubo un error al subir la imagen. Se guardará sin imagen.');
+                }
+            }
+
+            const newProduct = {
+                sagitario,
+                title,
+                description,
+                price: precio,
+                category: categoria, // Agregar categoría
+                image: imageUrl
+            };
+
+            if (!isNaN(promocionalPrecio) && promocionalPrecio > 0) {
+                newProduct.promotionalPrice = promocionalPrecio;
+            }
+
+            try {
+                await addDoc(collection(db, "products"), newProduct);
+                showToast("Producto agregado con éxito");
+                productSagitarioInput.value = "";
+                productTitleInput.value = "";
+                productDescripcionInput.value = "";
+                productPrecioInput.value = "";
+                productPromocionalPrecioInput.value = "";
+                productCategoriaInput.value = ""; // Resetear categoría
+                imgFileInput.value = "";
+                imgPreview.style.display = 'none';
+                imgPreview.src = "";
+
+                await loadProducts(); 
+            } catch (error) {
+                console.error("Error al agregar producto:", error);
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "Error al agregar producto. Revisa la consola para más detalles.";
+            }
+        });
+
+        async function deleteProduct(id) {
+            if (confirm("¿Deseas eliminar este producto?")) {
+                try {
+                    await deleteDoc(doc(db, "products", id));
+                    showToast("Producto eliminado");
+                    await loadProducts();
+                } catch (error) {
+                    console.error("Error al eliminar producto:", error);
+                    showToast("Error al eliminar el producto.");
+                }
+            }
+        }
+
+        function openEditModal(id) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+
+            currentEditId = id;
+            editSagitario.value = prod.sagitario;
+            editTitle.value = prod.title;
+            editDescripcion.value = prod.description;
+            editPrecio.value = prod.price;
+            editPromocionalPrecio.value = prod.promotionalPrice ? prod.promotionalPrice : "";
+            editCategoria.value = prod.category; // Cargar categoría
+            editImagen.value = prod.image;
+
+            editModal.classList.add('open');
+        }
+
+        function closeEditModal() {
+            editModal.classList.remove('open');
+            currentEditId = null;
+        }
+
+        closeEditModalBtn.addEventListener('click', closeEditModal);
+        cancelEditBtn.addEventListener('click', closeEditModal);
+
+        saveChangesBtn.addEventListener('click', async () => {
+            if (!currentEditId) return;
+            const sagitario = editSagitario.value.trim();
+            const title = editTitle.value.trim();
+            const description = editDescripcion.value.trim();
+            const precio = parseFloat(editPrecio.value.trim());
+            const promocionalPrecio = parseFloat(editPromocionalPrecio.value.trim());
+            const categoria = editCategoria.value.trim(); // Obtener categoría en edición
+            const imagen = editImagen.value.trim();
+
+            if (!sagitario || !title || !description || isNaN(precio) || precio <= 0 || !categoria) { // Validar categoría
+                showToast("Datos inválidos, revisa el formulario.");
+                return;
+            }
+
+            const updatedData = {
+                sagitario, 
+                title, 
+                description, 
+                price: precio,
+                category: categoria, // Actualizar categoría
+                image: imagen || ""
+            };
+
+            if (!isNaN(promocionalPrecio) && promocionalPrecio > 0) {
+                updatedData.promotionalPrice = promocionalPrecio;
+            } else {
+                updatedData.promotionalPrice = null;
+            }
+
+            try {
+                await updateDoc(doc(db, "products", currentEditId), updatedData);
+                showToast("Producto actualizado");
+                closeEditModal();
+                await loadProducts();
+            } catch (error) {
+                console.error("Error al actualizar producto:", error);
+                showToast("Error al actualizar el producto.");
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+</body>
+</html>
+
+
