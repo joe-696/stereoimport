@@ -7,7 +7,6 @@
     <meta name="keywords" content="Stereo Importaciones, celulares, iPhone, Motorola, Redmi, Xiaomi, Oppo, Pixel, teléfonos inteligentes, smartphones, comprar celulares, laptops, tecnología">
     <meta name="author" content="Stereo Importaciones SAC">
 
-   
     <!-- Preconnect para mejorar el rendimiento -->
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -16,7 +15,6 @@
     <!-- Favicon -->
     <link rel="icon" href="https://cellmarket-sac.web.app/favicon.ico" type="image/x-icon">
 
-   
     <title>Stereo Importaciones - Venta de Celulares de las Mejores Marcas</title>
 
     <!-- Iconos -->
@@ -25,16 +23,16 @@
 
     <style>
     :root {
-        --color-fondo: #f9f9f9;
+        --color-fondo: #f0f4f8;
         --color-blanco: #ffffff;
-        --color-gris-claro: #eeeeee;
+        --color-gris-claro: #e0e0e0;
         --color-gris: #333333;
         --color-gris-oscuro: #555555;
-        --color-primario: #007BFF; 
-        --color-secundario: #FF4081; 
+        --color-primario: #1e90ff; /* Azul Dodger */
+        --color-secundario: #ff6b81; /* Rosa Coral */
         --color-texto: #333333;
         --color-texto-claro: #ffffff;
-        --color-hover: #FFA000; 
+        --color-hover: #ff9800; /* Naranja */
         --fuente-principal: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -60,7 +58,7 @@
         top: 0; 
         width: 100%; 
         z-index: 1000;
-        background: linear-gradient(45deg, #0b0f2b, #04166a);
+        background: linear-gradient(45deg, #1e3c72, #2a5298); /* Azul más profundo */
         box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
@@ -82,7 +80,7 @@
     }
 
     nav a {
-        color: var(--color-primario); 
+        color: var(--color-blanco); 
         text-decoration: none; 
         display: inline-flex; 
         align-items: center; 
@@ -211,7 +209,7 @@
 
     .filters input:focus, .filters select:focus {
         border-color: var(--color-primario); 
-        box-shadow: 0 0 5px rgba(0,123,255,0.5);
+        box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
     }
 
     .filters input::placeholder {
@@ -280,8 +278,8 @@
     }
 
     .product:hover {
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        transform: translateY(-5px);
     }
 
     .product img {
@@ -592,6 +590,15 @@
     .cart-footer {
         padding: 1rem; 
         border-top: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cart-footer .total {
+        font-weight: bold;
+        font-size: 1.1rem;
+        text-align: right;
     }
 
     .cart-footer button {
@@ -683,8 +690,9 @@
     }
 
     .icon-circle.tiktok { background-color: #222222; }
-    .icon-circle.whatsapp { background-color: #20b954; }
-    .icon-circle.facebook { background-color: #3b5998; } /* Añadido color para Facebook */
+    .icon-circle.whatsapp { background-color: #25D366; } /* Color oficial de WhatsApp */
+    .icon-circle.facebook { background-color: #3b5998; }
+    .icon-circle.instagram { background-color: #C13584; } /* Añadido Instagram */
 
     .contact-section p {
         text-align: center; 
@@ -804,6 +812,51 @@
     @media (max-width: 480px) {
         .filters { flex-direction: column; }
     }
+
+    /* Sección de Nuestros Clientes */
+    .clients-section {
+        background: var(--color-blanco);
+        padding: 2rem 1rem;
+        text-align: center;
+        border-top: 1px solid #ccc;
+    }
+
+    .clients-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        color: var(--color-texto);
+    }
+
+    .clients-carousel {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .client-logo {
+        flex: 0 0 auto;
+        width: 150px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: var(--color-gris-claro);
+        transition: transform 0.3s;
+    }
+
+    .client-logo img {
+        max-width: 100%;
+        max-height: 80%;
+        object-fit: contain;
+    }
+
+    .client-logo:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
     </style>
 </head>
 <body> 
@@ -859,15 +912,37 @@
                 <span>Pasaje 20 tienda 08, Blck 43, Av. Jose Galvez 250, La Victoria 15033, Peru</span>
             </div>
         </section>
-        <h1>Nuestros productos</h1>
+        <h1 class="container" style="text-align: center; margin-top: 2rem;">Nuestros Productos</h1>
         <section class="products container" id="productsSection">
             <!-- Productos cargados dinámicamente -->
+        </section>
+
+        <!-- Sección de Nuestros Clientes -->
+        <section class="clients-section">
+            <h2>Nuestros Clientes</h2>
+            <div class="clients-carousel">
+                <div class="client-logo">
+                    <img src="https://via.placeholder.com/150x80?text=Cliente+1" alt="Cliente 1" loading="lazy">
+                </div>
+                <div class="client-logo">
+                    <img src="https://via.placeholder.com/150x80?text=Cliente+2" alt="Cliente 2" loading="lazy">
+                </div>
+                <div class="client-logo">
+                    <img src="https://via.placeholder.com/150x80?text=Cliente+3" alt="Cliente 3" loading="lazy">
+                </div>
+                <div class="client-logo">
+                    <img src="https://via.placeholder.com/150x80?text=Cliente+4" alt="Cliente 4" loading="lazy">
+                </div>
+                <div class="client-logo">
+                    <img src="https://via.placeholder.com/150x80?text=Cliente+5" alt="Cliente 5" loading="lazy">
+                </div>
+                <!-- Añade más logotipos según sea necesario -->
+            </div>
         </section>
 
         <section class="contact-section" id="contacto">
             <h2>Contáctanos</h2>
             <div class="contact-info">
-                
                 <a href="https://wa.me/+51931292396" target="_blank" class="icon-circle whatsapp" title="WhatsApp">
                     <i class="bi bi-whatsapp"></i>
                 </a>
@@ -876,6 +951,9 @@
                 </a>
                 <a href="https://www.tiktok.com/@cell_market_sac?_t=8s44MTtNbaY&_r=1" target="_blank" class="icon-circle tiktok" title="TikTok">
                     <i class="bi bi-tiktok"></i>
+                </a>
+                <a href="https://www.instagram.com/cell_market_sac/" target="_blank" class="icon-circle instagram" title="Instagram">
+                    <i class="bi bi-instagram"></i>
                 </a>
             </div>
             <p>Correo electrónico: stereo.import@gmail.com</p>
@@ -907,11 +985,11 @@
             <h2>Carrito</h2>
             <button class="close-cart" id="closeCartBtn" aria-label="Cerrar Carrito">×</button>
         </div>
+        <div class="cart-items" id="cartItems"></div>
         <div class="cart-footer">
+            <p class="total">Total: $<span id="cartTotal">0.00</span></p>
             <button id="checkoutBtn"><i class="fas fa-credit-card"></i> Comprar</button>
         </div>
-        <div class="cart-items" id="cartItems"></div>
-        
     </div>
 
     <!-- Modal de Finalizar Compra -->
@@ -981,7 +1059,7 @@
 
         const productsSection = document.getElementById('productsSection');
         const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter'); // Cambiado de brandFilter a categoryFilter
+        const categoryFilter = document.getElementById('categoryFilter');
         const productModalOverlay = document.getElementById('productModalOverlay');
         const modalProductImg = document.getElementById('modalProductImg');
         const modalProductName = document.getElementById('modalProductName');
@@ -995,6 +1073,7 @@
         const closeCartBtn = document.getElementById('closeCartBtn');
         const cartButton = document.getElementById('cartButton');
         const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
         const toast = document.getElementById('toast');
 
         const checkoutModalOverlay = document.getElementById('checkoutModalOverlay');
@@ -1005,17 +1084,36 @@
         let currentModalProduct = null;
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+        /**
+         * Mostrar notificación tipo toast
+         * @param {string} message - Mensaje a mostrar
+         */
         const showToast = (message) => {
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
         };
 
+        /**
+         * Guardar el carrito en localStorage y actualizar el contador y el precio total
+         */
         const saveCartToLocalStorage = () => {
             localStorage.setItem('cart', JSON.stringify(cart));
             cartCount.textContent = cart.length;
+            updateCartTotal(); // Actualizar el total cada vez que se guarda el carrito
         };
 
+        /**
+         * Actualizar el monto total en el carrito
+         */
+        const updateCartTotal = () => {
+            const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+            cartTotal.textContent = total.toFixed(2);
+        };
+
+        /**
+         * Actualizar el DOM del carrito
+         */
         const updateCartDOM = () => {
             cartItemsContainer.innerHTML = '';
             if (cart.length === 0) {
@@ -1036,8 +1134,15 @@
                 });
             }
             cartCount.textContent = cart.length;
+            updateCartTotal(); // Actualizar el total cada vez que se actualiza el DOM
         };
 
+        /**
+         * Añadir producto al carrito
+         * @param {string} name - Nombre del producto
+         * @param {number} price - Precio del producto
+         * @param {string} image - URL de la imagen del producto
+         */
         const addToCart = (name, price, image) => {
             cart.push({ name, price, image });
             saveCartToLocalStorage();
@@ -1045,6 +1150,10 @@
             showToast("Producto agregado al carrito!");
         };
 
+        /**
+         * Remover producto del carrito
+         * @param {number} index - Índice del producto en el carrito
+         */
         const removeFromCart = (index) => {
             cart.splice(index, 1);
             saveCartToLocalStorage();
@@ -1052,6 +1161,9 @@
             showToast("Producto removido del carrito!");
         };
 
+        /**
+         * Mostrar skeleton loading mientras se cargan los productos
+         */
         const showSkeleton = () => {
             productsSection.innerHTML = '';
             for (let i = 0; i < 8; i++) {
@@ -1067,6 +1179,11 @@
             }
         };
 
+        /**
+         * Formatear la descripción del producto con HTML
+         * @param {string} description - Descripción del producto
+         * @returns {string} HTML formateado
+         */
         const formatDescription = (description) => {
             if (!description) return '<div>Sin detalles adicionales</div>';
 
@@ -1094,6 +1211,10 @@
             return html || '<div>Sin detalles adicionales</div>';
         };
 
+        /**
+         * Renderizar los productos en el DOM
+         * @param {Array} products - Arreglo de productos a renderizar
+         */
         const renderProducts = (products) => {
             productsSection.innerHTML = '';
             if (products.length === 0) {
@@ -1101,8 +1222,8 @@
                 return;
             }
 
-            products.forEach((product, index) => {
-                const { image = 'https://via.placeholder.com/150', title, sagitario, description, price, promotionalPrice, category } = product; // Asegúrate de que el campo 'category' exista
+            products.forEach((product) => {
+                const { id, image = 'https://via.placeholder.com/150', title, sagitario, description, price, promotionalPrice, category } = product; // Asegúrate de que el campo 'category' exista
                 const finalPrice = promotionalPrice && promotionalPrice > 0 ? promotionalPrice : price;
                 const hasPromo = promotionalPrice && promotionalPrice > 0;
                 const priceHTML = hasPromo
@@ -1111,7 +1232,7 @@
 
                 const productEl = document.createElement('div');
                 productEl.className = 'product';
-                productEl.setAttribute('data-index', index);
+                productEl.setAttribute('data-id', id); // Asignar data-id único
                 productEl.innerHTML = `
                     <img src="${image}" alt="${title}" class="product-img" loading="lazy">
                     <h3>${title}</h3>
@@ -1128,6 +1249,9 @@
             });
         };
 
+        /**
+         * Aplicar filtros de búsqueda y categoría
+         */
         const applyFilters = () => {
             const searchText = searchInput.value.toLowerCase();
             const selectedCategory = categoryFilter.value.toLowerCase();
@@ -1147,6 +1271,10 @@
             renderProducts(filteredProducts);
         };
 
+        /**
+         * Abrir el modal de producto con los detalles correspondientes
+         * @param {Object} product - Producto seleccionado
+         */
         const openProductModal = (product) => {
             currentModalProduct = product;
             const { image = 'https://via.placeholder.com/150', title, description, sagitario, price, promotionalPrice } = product;
@@ -1164,15 +1292,21 @@
             productModalOverlay.classList.add('open');
         };
 
+        /**
+         * Cerrar el modal de producto
+         */
         const closeProductModal = () => {
             productModalOverlay.classList.remove('open');
         };
 
+        /**
+         * Cargar los productos desde Firestore
+         */
         const loadProducts = async () => {
             showSkeleton();
             try {
                 const querySnapshot = await getDocs(collection(db, 'products'));
-                allProducts = querySnapshot.docs.map(docSnap => docSnap.data());
+                allProducts = querySnapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() })); // Incluir 'id'
                 applyFilters();
             } catch (error) {
                 console.error("Error al cargar productos:", error);
@@ -1180,6 +1314,13 @@
             }
         };
 
+        /**
+         * Animación de vuelo hacia el carrito al agregar un producto
+         * @param {HTMLElement} imgElement - Imagen del producto
+         * @param {string} name - Nombre del producto
+         * @param {number} price - Precio del producto
+         * @param {string} image - URL de la imagen del producto
+         */
         const flyToCart = (imgElement, name, price, image) => {
             const rect = imgElement.getBoundingClientRect();
             const cartRect = cartButton.getBoundingClientRect();
@@ -1200,14 +1341,17 @@
             }, { once: true });
         };
 
+        // Evento al cargar el DOM
         document.addEventListener('DOMContentLoaded', () => {
             updateCartDOM();
             loadProducts();
         });
 
+        // Eventos de filtro
         searchInput.addEventListener('input', applyFilters);
-        categoryFilter.addEventListener('change', applyFilters); // Cambiado de brandFilter a categoryFilter
+        categoryFilter.addEventListener('change', applyFilters);
 
+        // Eventos del modal de producto
         closeProductModalBtn.addEventListener('click', closeProductModal);
         productModalOverlay.addEventListener('click', (e) => {
             if (e.target === productModalOverlay) closeProductModal();
@@ -1222,6 +1366,7 @@
             }
         });
 
+        // Eventos del carrito
         cartButton.addEventListener('click', () => cartModal.classList.toggle('open'));
         closeCartBtn.addEventListener('click', () => cartModal.classList.remove('open'));
 
@@ -1232,6 +1377,7 @@
             }
         });
 
+        // Evento de checkout
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) {
                 showToast('No hay productos en el carrito.');
@@ -1245,6 +1391,7 @@
             checkoutModalOverlay.classList.remove('open');
         });
 
+        // Evento de formulario de checkout
         checkoutForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -1285,15 +1432,18 @@
             showToast('¡Compra finalizada! Redirigiendo a WhatsApp...');
         });
 
+        /**
+         * Evento de click en productos para abrir el modal o agregar al carrito
+         */
         productsSection.addEventListener('click', (e) => {
             const productCard = e.target.closest('.product');
             if (!productCard || productCard.classList.contains('skeleton')) return;
 
-            const index = productCard.getAttribute('data-index');
-            const product = allProducts[index];
+            const id = productCard.getAttribute('data-id'); // Obtener el id único
+            const product = allProducts.find(p => p.id === id); // Encontrar el producto correcto
 
             if (e.target.closest('.add-to-cart-btn')) {
-                e.stopPropagation();
+                e.stopPropagation(); // Evita que el click abra el modal
                 const button = e.target.closest('.add-to-cart-btn');
                 const name = button.getAttribute('data-name');
                 const price = Number(button.getAttribute('data-price'));
@@ -1301,10 +1451,13 @@
                 const imgElement = productCard.querySelector('img');
                 flyToCart(imgElement, name, price, image);
             } else {
-                openProductModal(product);
+                if (product) {
+                    openProductModal(product);
+                }
             }
         });
 
+        // Rotación de imágenes en el banner
         const bannerImages = document.querySelectorAll('.banner .banner-image-container img');
         let currentImageIndex = 0;
         setInterval(() => {
@@ -1313,5 +1466,43 @@
             bannerImages[currentImageIndex].classList.add('active');
         }, 5000);
     </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
