@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Stereo Import</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles-new.css">
+    <link rel="stylesheet" href="css/forms-new.css">
+    <link rel="stylesheet" href="css/table-new.css">
+    <link rel="stylesheet" href="css/modals-new.css">
+    <link rel="stylesheet" href="css/toast-new.css">
+    <link rel="stylesheet" href="css/images-new.css">
+</head>
+<body>
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png" alt="Stereo Import" class="auth-logo">
+                <h1>Panel de Administración</h1>
+                <p>Stereo Import - Gestión de Productos</p>
+            </div>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Correo electrónico" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Sistema seguro con Firebase Authentication</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <img src="https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png" alt="Stereo Import" class="header-logo">
+                <div class="header-info">
+                    <h1>Panel de Administración</h1>
+                    <span class="header-subtitle">Gestión de Productos - Stereo Import</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="user-email" id="userEmail">admin@stereoimport.com</span>
+                    <button class="btn btn-secondary btn-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="admin-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </button>
+                <button class="nav-tab" data-tab="products">
+                    <i class="fas fa-boxes"></i>
+                    Productos
+                </button>
+                <button class="nav-tab" data-tab="add-product">
+                    <i class="fas fa-plus-circle"></i>
+                    Agregar Producto
+                </button>
+                <button class="nav-tab" data-tab="bulk-upload">
+                    <i class="fas fa-upload"></i>
+                    Carga Masiva
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalProducts">0</h3>
+                            <p>Total Productos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCategories">0</h3>
+                            <p>Categorías</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStock">0</h3>
+                            <p>Total Stock</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="lowStock">0</h3>
+                            <p>Stock Bajo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-card">
+                        <h3>Productos por Categoría</h3>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h3>Actividad Reciente</h3>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Activities will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div class="tab-content" id="products">
+                <div class="products-header">
+                    <h2>Gestión de Productos</h2>
+                    
+                    <div class="products-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchProducts" placeholder="Buscar productos...">
+                        </div>
+                        
+                        <select id="filterCategory" class="filter-select">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                        
+                        <button class="btn btn-primary" onclick="window.adminPanel.loadProducts()">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="products-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                                <th>Imagen</th>
+                                <th>Información</th>
+                                <th>Categoría</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <!-- Products will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bulk-actions" id="bulkActions" style="display: none;">
+                    <button class="btn btn-danger" onclick="window.adminPanel.bulkDelete()">
+                        <i class="fas fa-trash"></i>
+                        Eliminar Seleccionados
+                    </button>
+                    <button class="btn btn-warning" onclick="window.adminPanel.bulkToggleStatus()">
+                        <i class="fas fa-toggle-on"></i>
+                        Cambiar Estado
+                    </button>
+                </div>
+
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Add Product Tab -->
+            <div class="tab-content" id="add-product">
+                <div class="form-header">
+                    <h2 id="formTitle">Agregar Nuevo Producto</h2>
+                    <button class="btn btn-secondary" onclick="window.adminPanel.resetProductForm()">
+                        <i class="fas fa-plus"></i>
+                        Nuevo Producto
+                    </button>
+                </div>
+
+                <form class="product-form" id="productForm">
+                    <input type="hidden" id="productId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productTitle">Nombre del Producto *</label>
+                            <input type="text" id="productTitle" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productBrand">Marca *</label>
+                            <input type="text" id="productBrand" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productDescription">Descripción</label>
+                        <textarea id="productDescription" rows="4" placeholder="Descripción detallada del producto..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productCategory">Categoría *</label>
+                            <select id="productCategory" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="Parlantes">Parlantes</option>
+                                <option value="Audífonos">Audífonos</option>
+                                <option value="Altavoces">Altavoces</option>
+                                <option value="Accesorios">Accesorios</option>
+                                <option value="Equipos DJ">Equipos DJ</option>
+                                <option value="Home Theater">Home Theater</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productStock">Stock</label>
+                            <input type="number" id="productStock" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">Precio Regular (S/) *</label>
+                            <input type="number" id="productPrice" step="0.01" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="productPromoPrice">Precio Promocional (S/)</label>
+                            <input type="number" id="productPromoPrice" step="0.01" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imágenes del Producto</label>
+                        <div class="image-upload-area" id="imageUploadArea">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Haz clic para subir imágenes o arrastra aquí</p>
+                                <small>PNG, JPG, GIF hasta 5MB cada una</small>
+                            </div>
+                            <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.adminPanel.resetProductForm()">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            <span id="submitButtonText">Guardar Producto</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Bulk Upload Tab -->
+            <div class="tab-content" id="bulk-upload">
+                <div class="upload-header">
+                    <h2>Carga Masiva de Productos</h2>
+                    <p>Sube múltiples productos usando un archivo CSV</p>
+                </div>
+
+                <div class="upload-instructions">
+                    <h3>Instrucciones:</h3>
+                    <ol>
+                        <li>Descarga la plantilla CSV</li>
+                        <li>Completa los datos de tus productos</li>
+                        <li>Sube el archivo completado</li>
+                    </ol>
+                    
+                    <button class="btn btn-secondary" onclick="window.adminPanel.downloadTemplate()">
+                        <i class="fas fa-download"></i>
+                        Descargar Plantilla
+                    </button>
+                </div>
+
+                <div class="upload-area" id="csvUploadArea">
+                    <div class="upload-placeholder">
+                        <i class="fas fa-file-csv"></i>
+                        <p>Arrastra tu archivo CSV aquí o haz clic para seleccionar</p>
+                        <small>Solo archivos CSV, máximo 10MB</small>
+                    </div>
+                    <input type="file" id="csvInput" accept=".csv" style="display: none;">
+                </div>
+
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Procesando...</div>
+                </div>
+
+                <div class="upload-results" id="uploadResults" style="display: none;">
+                    <h3>Resultados de la Carga</h3>
+                    <div class="results-summary">
+                        <div class="result-item success">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="successCount">0</span> productos agregados
+                        </div>
+                        <div class="result-item error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="errorCount">0</span> errores
+                        </div>
+                    </div>
+                    <div class="results-details" id="resultsDetails"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal-overlay" id="editProductModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Editar Producto</h3>
+                <button class="modal-close" onclick="window.adminPanel.closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                <!-- Edit form will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay" id="confirmDeleteModal">
+        <div class="modal small">
+            <div class="modal-header">
+                <h3>Confirmar Eliminación</h3>
+                <button class="modal-close" onclick="window.adminPanel.closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>¿Estás seguro de que deseas eliminar este producto?</p>
+                    <p class="warning-text">Esta acción no se puede deshacer.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="window.adminPanel.closeDeleteModal()">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/admin-panel.js"></script>
+</body>
+</html>
