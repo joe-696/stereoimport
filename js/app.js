@@ -1,13 +1,10 @@
 // Core App Module
-import { CartManager } from './cart.js';
-
 class StereoImportApp {
     constructor() {
         this.isLoaded = false;
         this.isMobileMenuOpen = false;
         this.lastScrollY = 0;
         this.ticking = false;
-        this.cartManager = null;
         
         this.init();
     }
@@ -27,9 +24,6 @@ class StereoImportApp {
     onDOMReady() {
         console.log('🎵 Stereo Import DOM ready! 🔊');
         
-        // Initialize cart manager first
-        this.initializeCart();
-        
         // Initialize components
         this.initializeHeader();
         this.initializeMobileMenu();
@@ -48,16 +42,6 @@ class StereoImportApp {
         document.body.classList.add('loaded');
         
         console.log('🎵 Stereo Import initialized successfully! 🔊');
-    }
-
-    // Initialize cart manager
-    initializeCart() {
-        try {
-            this.cartManager = new CartManager();
-            console.log('🛒 Cart manager initialized successfully!');
-        } catch (error) {
-            console.error('❌ Error initializing cart manager:', error);
-        }
     }
 
     onPageLoad() {

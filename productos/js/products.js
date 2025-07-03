@@ -232,7 +232,8 @@ export class ProductManager {
                     console.log('🛒 Product Manager - Add to cart clicked:', { name, price, image });
                     
                     if (this.cartManager && name && !isNaN(price)) {
-                        this.cartManager.addToCart(name, price, image);
+                        // Pasar el elemento del producto como fuente para las animaciones
+                        this.cartManager.addToCart(name, price, image, productElement);
                     } else if (!this.cartManager) {
                         console.error('❌ CartManager not available');
                     } else {

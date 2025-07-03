@@ -1,5 +1,6 @@
 import { Utils } from './utils.js';
 import { CART_CONFIG, CartUtils, CartSync } from '../../shared/cartConfig.js';
+import { CartAnimations } from '../../js/cartAnimations.js';
 
 // Cart Management Class
 export class CartManager {
@@ -10,6 +11,9 @@ export class CartManager {
         this.cartCount = document.getElementById('cartCount');
         this.cartTotal = document.getElementById('cartTotal');
         this.toast = document.getElementById('toast');
+        
+        // Inicializar animaciones
+        this.animations = new CartAnimations();
         
         this.initializeElements();
     }
@@ -81,7 +85,7 @@ export class CartManager {
         this.updateCartDisplay();
         this.saveCartToLocalStorage();
     }    // Add item to cart
-    addToCart(name, price, image) {
+    addToCart(name, price, image, sourceElement = null) {
         console.log('🛒 Adding to cart:', { name, price, image }); // Debug log
         
         const existingItem = CartUtils.findItemByName(this.cart, name);
@@ -101,7 +105,15 @@ export class CartManager {
         }
         
         this.updateCartDOM();
-        Utils.showToast("Producto agregado al carrito!", this.toast);
+        
+        // Activar animaciones si se proporciona el elemento fuente
+        if (sourceElement) {
+            const cartButton = this.cartButton || document.querySelector('[id*="cart"]');
+            this.animations.animateAddToCart(sourceElement, name, image, cartButton);
+        } else {
+            // Fallback: solo mostrar notificación
+            this.animations.showCartNotification(name, image);
+        }
     }
 
     // Remove item from cart
@@ -196,7 +208,9 @@ export class CartManager {
                     console.log('🛒 CartManager - Add to cart clicked (fallback):', { name, price, image });
                     
                     if (name && !isNaN(price)) {
-                        this.addToCart(name, price, image);
+                        // Buscar el elemento del producto más cercano
+                        const productElement = button.closest('.product, .product-card, .item') || button.parentElement;
+                        this.addToCart(name, price, image, productElement);
                     } else {
                         console.error('❌ Invalid product data:', { name, price, image });
                     }

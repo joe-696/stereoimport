@@ -3,6 +3,7 @@ import { firebaseConfig, WHATSAPP_NUMBER, APP_CONFIG } from '../../shared/config
 import { SharedUtils } from '../../shared/utils.js';
 import { CART_CONFIG, CartUtils, CartSync } from '../../shared/cartConfig.js';
 import { firebaseService } from '../../shared/firebaseService.js';
+import { CartAnimations } from '../../js/cartAnimations.js';
 
 // Gestor de carrito optimizado para la página de categorías
 class CategoryCartManager {
@@ -10,6 +11,7 @@ class CategoryCartManager {
         this.cart = CartSync.loadCart();
         this.cartCount = document.getElementById('cartCount');
         this.toast = document.getElementById('toast');
+        this.animations = new CartAnimations();
         this.updateUI();
     }
     
@@ -19,7 +21,7 @@ class CategoryCartManager {
         }
     }
     
-    addToCart(name, price, image) {
+    addToCart(name, price, image, sourceElement = null) {
         const existingItem = CartUtils.findItemByName(this.cart, name);
         
         if (existingItem) {
@@ -30,9 +32,18 @@ class CategoryCartManager {
                 this.cart.push(newItem);
             }
         }
-          CartSync.saveCart(this.cart);
+          
+        CartSync.saveCart(this.cart);
         this.updateUI();
-        SharedUtils.showToast('Producto agregado al carrito', this.toast);
+        
+        // Activar animaciones si se proporciona el elemento fuente
+        if (sourceElement) {
+            const cartButton = document.querySelector('[id*="cart"]');
+            this.animations.animateAddToCart(sourceElement, name, image, cartButton);
+        } else {
+            // Fallback: solo mostrar notificación
+            this.animations.showCartNotification(name, image);
+        }
     }
 }
 
@@ -347,7 +358,8 @@ class CategoryApp {
                     const price = Number(button.dataset.price);
                     const image = button.dataset.image;
                     
-                    this.cartManager.addToCart(name, price, image);
+                    // Pasar el elemento del producto como fuente para las animaciones
+                    this.cartManager.addToCart(name, price, image, productCard);
                     return;
                 }
                 

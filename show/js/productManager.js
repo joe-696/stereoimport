@@ -163,7 +163,9 @@ export class ProductManager {
     }
 
     addToCart(name, price, image) {
-        this.cartManager.addItem(name, price, image);
+        // Buscar el elemento del producto en la página
+        const productElement = document.querySelector('.product-detail, .product-section, #productSection');
+        this.cartManager.addItem(name, price, image, productElement);
     }
 
     askWhatsApp() {

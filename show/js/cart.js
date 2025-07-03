@@ -1,11 +1,13 @@
 import { SharedUtils } from '../../shared/utils.js';
 import { CART_CONFIG, CartUtils, CartSync } from '../../shared/cartConfig.js';
+import { CartAnimations } from '../../js/cartAnimations.js';
 
 // Gestión del carrito de compras
 export class CartManager {
     constructor() {
         // Usar configuración compartida
         this.cart = CartSync.loadCart();
+        this.animations = new CartAnimations();
         this.elements = {
             cartBtn: document.getElementById('cartBtn'),
             cartCount: document.getElementById('cartCount'),
@@ -56,7 +58,7 @@ export class CartManager {
                 }
             };
         }
-    }    addItem(name, price, image) {
+    }    addItem(name, price, image, sourceElement = null) {
         const existingItem = CartUtils.findItemByName(this.cart, name);
         
         if (existingItem) {
@@ -70,7 +72,15 @@ export class CartManager {
         
         this.updateUI();
         this.render();
-        SharedUtils.showToast('Producto agregado al carrito');
+        
+        // Activar animaciones si se proporciona el elemento fuente
+        if (sourceElement) {
+            const cartButton = this.elements.cartBtn;
+            this.animations.animateAddToCart(sourceElement, name, image, cartButton);
+        } else {
+            // Fallback: solo mostrar notificación
+            this.animations.showCartNotification(name, image);
+        }
     }
 
     removeItem(index) {
