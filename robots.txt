@@ -1,0 +1,33 @@
+# Robots.txt para Stereo Import
+# Permite el acceso completo a los motores de búsqueda
+
+User-agent: *
+Allow: /
+
+# Ubicación del sitemap
+Sitemap: https://stereoimport.com/sitemap.xml
+
+# Directivas específicas para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Directivas para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Permitir acceso a archivos CSS y JS para renderizado
+User-agent: *
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.webp
+
+# Información adicional
+# Sitio web: https://stereoimport.com
+# Contacto: stereo.import@gmail.com

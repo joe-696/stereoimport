@@ -1,0 +1,47 @@
+/* Estilos para toast */
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d3748;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .edit-btn,
+    .action-buttons .delete-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .modal-content {
+        max-width: 90%;
+    }
+}

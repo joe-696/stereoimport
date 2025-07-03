@@ -1,0 +1,302 @@
+/* Enhanced Interactive Styles */
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Typing Effect */
+@keyframes blink {
+    0%, 50% { border-color: transparent; }
+    51%, 100% { border-color: white; }
+}
+
+/* Enhanced Button Styles */
+.btn-enhanced {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    border: none;
+    border-radius: var(--border-radius-pill);
+    color: white;
+    cursor: pointer;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-weight: var(--font-weight-bold);
+    transition: var(--transition-elastic);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: var(--transition);
+}
+
+.btn-enhanced:hover::before {
+    left: 100%;
+}
+
+.btn-enhanced:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 112, 211, 0.4);
+}
+
+.btn-enhanced:active {
+    transform: translateY(-1px);
+}
+
+/* Floating Action Buttons Enhancement */
+.floating-action {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-floating);
+    transition: var(--transition-elastic);
+    z-index: 1000;
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-action:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-neon-hover);
+}
+
+/* Enhanced Card Hover Effects */
+.card-3d {
+    transform-style: preserve-3d;
+    transition: var(--transition);
+}
+
+.card-3d:hover {
+    transform: rotateY(10deg) rotateX(10deg);
+}
+
+/* Glitch Effect */
+.glitch {
+    position: relative;
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: glitch 2s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+    color: #ff0040;
+    z-index: -1;
+}
+
+.glitch::after {
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+    color: #00ffff;
+    z-index: -2;
+}
+
+@keyframes glitch {
+    0%, 74%, 77%, 78%, 81%, 90%, 100% {
+        transform: translate(0);
+    }
+    75% {
+        transform: translate(-2px, 0);
+    }
+    76% {
+        transform: translate(2px, 0);
+    }
+    79% {
+        transform: translate(-1px, 0);
+    }
+    80% {
+        transform: translate(1px, 0);
+    }
+    82% {
+        transform: translate(-2px, 0);
+    }
+    84% {
+        transform: translate(2px, 0);
+    }
+}
+
+@keyframes glitch-anim {
+    0%, 74%, 77%, 78%, 81%, 90%, 100% {
+        transform: translate(0);
+    }
+    75% {
+        transform: translate(2px, 0);
+    }
+    76% {
+        transform: translate(-2px, 0);
+    }
+    79% {
+        transform: translate(1px, 0);
+    }
+    80% {
+        transform: translate(-1px, 0);
+    }
+    82% {
+        transform: translate(2px, 0);
+    }
+    84% {
+        transform: translate(-2px, 0);
+    }
+}
+
+@keyframes glitch-anim2 {
+    0%, 70%, 75%, 76%, 79%, 85%, 100% {
+        transform: translate(0);
+    }
+    71% {
+        transform: translate(-1px, 0);
+    }
+    74% {
+        transform: translate(1px, 0);
+    }
+    77% {
+        transform: translate(-2px, 0);
+    }
+    78% {
+        transform: translate(2px, 0);
+    }
+    80% {
+        transform: translate(-1px, 0);
+    }
+    83% {
+        transform: translate(1px, 0);
+    }
+}
+
+/* Neon Text Effect */
+.neon-text {
+    color: #fff;
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #0073e6,
+        0 0 20px #0073e6,
+        0 0 35px #0073e6,
+        0 0 40px #0073e6;
+    animation: neon-flicker 1.5s infinite alternate;
+}
+
+@keyframes neon-flicker {
+    0%, 100% {
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 15px #0073e6,
+            0 0 20px #0073e6,
+            0 0 35px #0073e6,
+            0 0 40px #0073e6;
+    }
+    50% {
+        text-shadow:
+            0 0 2px #fff,
+            0 0 5px #fff,
+            0 0 8px #0073e6,
+            0 0 12px #0073e6,
+            0 0 18px #0073e6,
+            0 0 25px #0073e6;
+    }
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Particle Canvas Styles */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .floating-action {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .glitch {
+        font-size: 2.5rem;
+    }
+    
+    .card-3d:hover {
+        transform: scale(1.02);
+    }
+    
+    #particles-canvas {
+        opacity: 0.1;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .ripple,
+    .glitch,
+    .neon-text,
+    .spinner,
+    #particles-canvas {
+        animation: none !important;
+    }
+    
+    .card-3d:hover {
+        transform: none !important;
+    }
+}

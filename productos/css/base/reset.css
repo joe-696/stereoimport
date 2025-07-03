@@ -1,0 +1,50 @@
+/* Reset y estilos base */
+* {
+    box-sizing: border-box;
+}
+
+body { 
+    margin: 0; 
+    font-family: 'Poppins', sans-serif; 
+    background: linear-gradient(180deg, rgba(79, 233, 229, 0.02) 0%, rgba(248, 249, 250, 1) 20%, rgba(248, 249, 250, 1) 100%);
+    background-attachment: fixed;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+button {
+    font-family: inherit;
+}
+
+input, select, textarea {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: inherit;
+}
+
+p {
+    margin: 0;
+}

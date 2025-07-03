@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Página Principal -->
+  <url>
+    <loc>https://stereoimport.com/</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png</image:loc>
+      <image:title>Stereo Import Logo</image:title>
+      <image:caption>Logo oficial de Stereo Import - Audio Profesional</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://i.ibb.co/QvmH51jQ/image.png</image:loc>
+      <image:title>Productos JBL Stereo Import</image:title>
+      <image:caption>Envío de productos JBL premium</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://i.ibb.co/Q3jwMrsz/image.png</image:loc>
+      <image:title>Equipos SONY Stereo Import</image:title>
+      <image:caption>Productos SONY originales para envío</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://i.ibb.co/Zz4XNsZn/image.png</image:loc>
+      <image:title>Entrega Stereo Import</image:title>
+      <image:caption>Entrega segura de equipos de audio</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Página de Productos -->
+  <url>
+    <loc>https://stereoimport.com/productos</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Secciones de la página principal -->
+  <url>
+    <loc>https://stereoimport.com/#inicio</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://stereoimport.com/#envios</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://stereoimport.com/#ubicacion</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://stereoimport.com/#contacto</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

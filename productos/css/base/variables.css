@@ -1,0 +1,84 @@
+/* Variables CSS para colores, espaciado y tipografía */
+:root {    /* Colores principales */
+    --primary-color: #4FE9E5;
+    --secondary-color: #0057C4;
+    --accent-color: #ff4757;
+    --success-color: #25D366;
+    /* Colores de fondo */
+    --bg-primary: #f8f9fa;
+    --bg-white: #ffffff;
+    --bg-cream: #fff8f2;
+    --bg-dark: #fff8f2;
+    --bg-overlay: rgba(255, 248, 242, 0.85);
+    /* Colores de texto */
+    --text-primary: #2c3e50;
+    --text-secondary: #5a6c7d;
+    --text-muted: #95a5a6;
+    --text-white: #ffffff;
+    
+    /* Colores de borde */
+    --border-light: #e0e0e0;
+    --border-lighter: #f0f0f0;
+    
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    --gradient-header: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    
+    /* Espaciado */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 15px;
+    --spacing-lg: 20px;
+    --spacing-xl: 25px;
+    --spacing-xxl: 30px;
+    --spacing-xxxl: 40px;
+    
+    /* Tamaños de fuente */
+    --font-xs: 0.8rem;
+    --font-sm: 0.9rem;
+    --font-base: 1rem;
+    --font-lg: 1.1rem;
+    --font-xl: 1.2rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 2rem;
+    --font-4xl: 2.5rem;
+    
+    /* Pesos de fuente */
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    
+    /* Bordes redondeados */
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 15px;
+    --radius-xl: 25px;
+    --radius-full: 50%;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 25px rgba(239, 234, 234, 0.15);
+    --shadow-modal: -5px 0 15px rgba(0, 0, 0, 0.2);
+    
+    /* Transiciones */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.6s ease;
+    
+    /* Z-index */
+    --z-header: 1000;
+    --z-search: 999;
+    --z-modal: 10000;
+    --z-toast: 30000;
+    --z-whatsapp: 9999;
+    --z-flying: 9999;
+    
+    /* Breakpoints */
+    --breakpoint-sm: 480px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1200px;
+}

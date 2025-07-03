@@ -1,0 +1,1025 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Visitantes | Análisis de Tráfico</title>
+    <style>
+        /* --- Estilos CSS (ligeramente ajustados) --- */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #475569;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px; /* Aumentado para más espacio */
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+         h2 {
+            color: var(--secondary);
+            margin-bottom: 20px; /* Más espacio */
+            font-weight: 600;
+            font-size: 1.5rem; /* Ligeramente más grande */
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+         }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajustado minmax */
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-title {
+            font-size: 1rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .content-section { /* Nuevo contenedor para filtros y tabla */
+            background-color: white;
+            padding: 30px; /* Más padding */
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 20px; /* Más espacio */
+            margin-bottom: 30px; /* Más espacio */
+            flex-wrap: wrap;
+            align-items: flex-end; /* Alinear al fondo */
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-group { /* Agrupar label y control */
+             display: flex;
+             flex-direction: column;
+             gap: 5px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 0.9rem; /* Más pequeño */
+            color: var(--secondary);
+        }
+
+        select, input[type="date"], input[type="month"] {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background-color: white;
+            font-size: 0.95rem;
+        }
+
+        select:focus, input:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px; /* Ligeramente más grande */
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        button:not(:disabled):hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        button.secondary {
+             background-color: var(--secondary);
+        }
+         button.secondary:not(:disabled):hover {
+             background-color: #334155; /* Darker secondary */
+         }
+
+        button.danger {
+            background-color: var(--danger);
+            padding: 4px 8px; /* Más pequeño para acciones en tabla */
+            font-size: 0.8rem;
+        }
+        button.danger:hover {
+            background-color: #dc2626; /* Darker danger */
+        }
+
+        #loadingStatus {
+            padding: 40px 20px; /* Más padding */
+            text-align: center;
+            font-weight: 500;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .table-container { /* Contenedor para hacer la tabla scrollable */
+             overflow-x: auto;
+             margin-top: 20px;
+        }
+
+        .visitor-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Ancho mínimo para evitar compresión excesiva */
+        }
+
+        .visitor-table th {
+            text-align: left;
+            padding: 14px 12px; /* Más padding vertical */
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.9rem;
+            white-space: nowrap; /* Evitar que los títulos se rompan */
+        }
+
+        .visitor-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle; /* Centrar verticalmente */
+            font-size: 0.9rem;
+        }
+
+        .visitor-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .pagination button {
+            background-color: white;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination button:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+            border-color: var(--border-color);
+        }
+
+        .data-cell {
+            max-width: 250px; /* Ajustado */
+            overflow-wrap: break-word;
+            word-break: break-all; /* Forzar quiebre si es necesario */
+        }
+
+        .data-cell-small {
+            max-width: 180px; /* Ajustado */
+            overflow-wrap: break-word;
+             word-break: break-all;
+        }
+         .data-cell-id {
+            max-width: 120px;
+            overflow-wrap: break-word;
+             word-break: break-all;
+             font-family: monospace;
+             font-size: 0.85rem;
+             color: var(--secondary);
+         }
+
+        .platform-badge {
+            display: inline-block;
+            padding: 4px 10px; /* Ajustado */
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            white-space: nowrap;
+        }
+
+        .time-ago {
+            font-size: 0.8rem; /* Más pequeño */
+            color: var(--secondary);
+            margin-top: 3px;
+            display: block;
+        }
+
+        .action-cell {
+             width: 80px; /* Ancho fijo para acciones */
+             text-align: center;
+        }
+
+        /* --- Estilos para la vista agrupada --- */
+        .grouped-view {
+            /* Puedes añadir estilos específicos si es necesario */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+             .filters {
+                 flex-direction: column;
+                 align-items: stretch; /* Ocupar ancho completo */
+             }
+             .filter-group {
+                 width: 100%;
+             }
+             .stats-container {
+                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+             }
+        }
+        @media (max-width: 768px) {
+             .container {
+                 padding: 10px;
+             }
+             header, .content-section {
+                 padding: 15px;
+             }
+             h1 { font-size: 1.5rem; }
+             h2 { font-size: 1.2rem; }
+             .stat-value { font-size: 1.5rem; }
+             .filters { gap: 15px; }
+             button { padding: 8px 14px; font-size: 0.9rem; }
+             .visitor-table th, .visitor-table td { font-size: 0.85rem; padding: 10px 8px;}
+             .data-cell, .data-cell-small, .data-cell-id { max-width: 150px; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Panel de Visitantes</h1>
+            <p>Monitoreo de visitas </p>
+        </header>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-title">Visitas Totales (Global)</div>
+                <div class="stat-value" id="totalVisits">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Visitas Hoy (Global)</div>
+                <div class="stat-value" id="todayVisits">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Visitantes Únicos (Global)</div>
+                <div class="stat-value" id="uniqueVisitors">--</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Historial de Visitas</h2>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="startDate">Fecha Inicio:</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="filter-group">
+                    <label for="endDate">Fecha Fin:</label>
+                    <input type="date" id="endDate">
+                </div>
+
+                <div class="filter-group">
+                     <label for="monthYear">Mes/Año:</label>
+                     <input type="month" id="monthYear">
+                </div>
+
+                 <div class="filter-group">
+                    <label for="sortBy">Ordenar por:</label>
+                    <select id="sortBy">
+                        <option value="timestamp_desc">Fecha (Reciente primero)</option>
+                        <option value="timestamp_asc">Fecha (Antiguo primero)</option>
+                        <option value="visitorId_asc">ID Visitante (A-Z)</option>
+                        <option value="visitorId_desc">ID Visitante (Z-A)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                     <label>&nbsp;</label> <button id="applyFiltersButton">Aplicar Filtros</button>
+                </div>
+                 <div class="filter-group">
+                     <label>&nbsp;</label>
+                     <button id="resetFiltersButton" class="secondary">Limpiar Filtros</button>
+                 </div>
+                 <div class="filter-group">
+                     <label>&nbsp;</label>
+                     <button id="toggleViewButton" class="secondary">Ver por Visitante</button>
+                 </div>
+            </div>
+
+            <div id="loadingStatus">Cargando visitas ...</div>
+
+            <div id="visitorTableContainer" style="display: none;">
+                 <div class="table-container">
+                     <table class="visitor-table">
+                         <thead>
+                             <tr id="tableHeaderRow">
+                                 </tr>
+                         </thead>
+                         <tbody id="visitorTableBody"></tbody>
+                     </table>
+                 </div>
+                 <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importar las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            query,
+            orderBy,
+            limit,
+            where,
+            startAfter,
+            endBefore, // Needed for potential previous page logic (though complex)
+            doc,       // Needed for deleting
+            deleteDoc, // Needed for deleting
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        // --- ¡¡IMPORTANTE!! ---
+        // USA TU NUEVA CONFIGURACIÓN DE FIREBASE DESPUÉS DE REGENERAR LA API KEY
+        // ¡NO USES LA QUE ESTÁ EXPUESTA!
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+            authDomain: "sagitariojbl1.firebaseapp.com",
+            projectId: "sagitariojbl1",
+            storageBucket: "sagitariojbl1.firebasestorage.app",
+            messagingSenderId: "424267774202",
+            appId: "1:424267774202:web:0be71a6adeacfe434f3143",
+            measurementId: "G-GGHQL53GT3"
+        };
+        // --- FIN IMPORTANTE ---
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Referencias a elementos del DOM
+        const totalVisitsElement = document.getElementById('totalVisits');
+        const todayVisitsElement = document.getElementById('todayVisits');
+        const uniqueVisitorsElement = document.getElementById('uniqueVisitors');
+        const visitorTableBody = document.getElementById('visitorTableBody');
+        const visitorTableContainer = document.getElementById('visitorTableContainer');
+        const tableHeaderRow = document.getElementById('tableHeaderRow');
+        const loadingStatus = document.getElementById('loadingStatus');
+        const applyFiltersButton = document.getElementById('applyFiltersButton');
+        const resetFiltersButton = document.getElementById('resetFiltersButton');
+        const toggleViewButton = document.getElementById('toggleViewButton');
+        const sortBySelect = document.getElementById('sortBy');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const monthYearInput = document.getElementById('monthYear');
+        const paginationElement = document.getElementById('pagination');
+
+        // Estado de la aplicación
+        const PAGE_SIZE = 15; // Reducido para mejor visualización
+        let lastVisibleDoc = null;
+        let firstVisibleDoc = null; // Para posible paginación hacia atrás
+        let currentPage = 1;
+        let currentViewMode = 'visits'; // 'visits' or 'grouped'
+        let currentFilters = {}; // Almacena los filtros activos
+        let allLoadedVisits = []; // Para la vista agrupada
+
+        // --- INICIALIZACIÓN ---
+        window.addEventListener('load', initializeDashboard);
+        applyFiltersButton.addEventListener('click', () => loadVisitors(true)); // Reinicia a la primera página con filtros
+        resetFiltersButton.addEventListener('click', resetFiltersAndLoad);
+        toggleViewButton.addEventListener('click', toggleView);
+        sortBySelect.addEventListener('change', () => loadVisitors(true)); // Recarga al cambiar orden
+
+        async function initializeDashboard() {
+            loadingStatus.style.display = 'block';
+            visitorTableContainer.style.display = 'none';
+            try {
+                await loadGlobalStats(); // Carga estadísticas globales una vez
+                await loadVisitors(true); // Carga la primera página de visitas
+            } catch (error) {
+                handleError("Error al inicializar el panel", error);
+            } finally {
+                 loadingStatus.style.display = 'none';
+            }
+        }
+
+        // --- CARGA DE DATOS ---
+
+        // Cargar estadísticas globales (sin filtros)
+        async function loadGlobalStats() {
+            try {
+                const visitsRef = collection(db, "visits");
+                const allVisitsQuery = query(visitsRef); // Sin filtros para stats globales
+                const allVisitsSnapshot = await getDocs(allVisitsQuery);
+
+                const totalVisits = allVisitsSnapshot.size;
+                totalVisitsElement.textContent = totalVisits;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayTimestamp = Timestamp.fromDate(today);
+
+                let todayVisits = 0;
+                const uniqueVisitors = new Set();
+
+                allVisitsSnapshot.forEach(doc => {
+                    const visit = doc.data();
+                    if (visit.visitorId) {
+                        uniqueVisitors.add(visit.visitorId);
+                    }
+                    // Asegúrate que visit.timestamp existe y es un Timestamp de Firestore
+                    if (visit.timestamp && typeof visit.timestamp.toDate === 'function') {
+                         if (visit.timestamp.toDate() >= today) {
+                            todayVisits++;
+                        }
+                    } else if (visit.timestamp) {
+                        // Intenta convertir si es un número (milisegundos) o string ISO
+                        try {
+                            const visitDate = new Date(visit.timestamp);
+                             if (!isNaN(visitDate) && visitDate >= today) {
+                                 todayVisits++;
+                             }
+                        } catch(e) { /* Ignora si no se puede convertir */}
+                    }
+                });
+
+                todayVisitsElement.textContent = todayVisits;
+                uniqueVisitorsElement.textContent = uniqueVisitors.size;
+
+            } catch (error) {
+                 handleError("Error al cargar estadísticas globales", error, totalVisitsElement, todayVisitsElement, uniqueVisitorsElement);
+            }
+        }
+
+        // Cargar visitas (con filtros y paginación)
+        async function loadVisitors(resetPage = false, pageAction = 'current') {
+            loadingStatus.textContent = 'Cargando visitas...';
+            loadingStatus.style.display = 'block';
+            visitorTableContainer.style.display = 'none';
+            paginationElement.innerHTML = ''; // Limpiar paginación mientras carga
+
+            if (resetPage) {
+                currentPage = 1;
+                lastVisibleDoc = null;
+                firstVisibleDoc = null;
+            }
+
+            try {
+                const visitsRef = collection(db, "visits");
+                let constraints = []; // Array para las condiciones de la consulta
+
+                // --- Aplicar Filtros ---
+                currentFilters = getAppliedFilters(); // Obtener filtros actuales de la UI
+
+                if (currentFilters.startDate) {
+                    constraints.push(where('timestamp', '>=', currentFilters.startDate));
+                }
+                if (currentFilters.endDate) {
+                     // Para incluir el día completo, vamos al inicio del día siguiente
+                     const nextDay = new Date(currentFilters.endDate.toDate());
+                     nextDay.setDate(nextDay.getDate() + 1);
+                     constraints.push(where('timestamp', '<', Timestamp.fromDate(nextDay)));
+                }
+
+                // --- Aplicar Ordenación ---
+                const sortDirection = sortBySelect.value.includes('_desc') ? 'desc' : 'asc';
+                const sortField = sortBySelect.value.split('_')[0];
+                constraints.push(orderBy(sortField, sortDirection));
+
+                // --- Aplicar Paginación ---
+                if (pageAction === 'next' && lastVisibleDoc) {
+                    constraints.push(startAfter(lastVisibleDoc));
+                }
+                // La paginación hacia atrás ('prev') con startBefore es más compleja y
+                // a menudo requiere almacenar los 'firstVisibleDoc' de páginas anteriores.
+                // Por simplicidad, la omitimos por ahora. El botón 'prev' se manejará
+                // recargando desde el principio si es necesario, o se podría deshabilitar.
+
+                constraints.push(limit(PAGE_SIZE));
+
+                // --- Construir y Ejecutar Consulta ---
+                const visitsQuery = query(visitsRef, ...constraints);
+                const querySnapshot = await getDocs(visitsQuery);
+
+                if (querySnapshot.empty && currentPage === 1) {
+                    loadingStatus.textContent = 'No se encontraron visitas con los filtros aplicados.';
+                    visitorTableBody.innerHTML = ''; // Limpiar tabla
+                    return; // Salir si no hay resultados en la primera página
+                } else if (querySnapshot.empty) {
+                     loadingStatus.textContent = 'No hay más visitas.';
+                     // Deshabilitar botón "siguiente" si la última página estaba llena
+                     // y esta consulta vacía significa que no hay más.
+                     lastVisibleDoc = null; // Indicar que no hay más páginas
+                     updatePagination(querySnapshot.size); // Actualiza para deshabilitar 'next'
+                     return;
+                }
+
+                // Guardar referencias para paginación
+                firstVisibleDoc = querySnapshot.docs[0];
+                lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+                // Procesar y renderizar resultados
+                allLoadedVisits = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                if (currentViewMode === 'visits') {
+                    renderVisitTable(allLoadedVisits);
+                } else {
+                    renderGroupedTable(allLoadedVisits);
+                }
+
+                updatePagination(querySnapshot.size); // Actualizar controles de paginación
+                visitorTableContainer.style.display = 'block';
+                loadingStatus.style.display = 'none';
+
+            } catch (error) {
+                handleError("Error al cargar visitas", error, loadingStatus);
+                visitorTableBody.innerHTML = ''; // Limpiar en caso de error
+            }
+        }
+
+        // --- RENDERIZADO ---
+
+        function renderVisitTable(visits) {
+            setTableHeaders('visits');
+            visitorTableBody.innerHTML = ''; // Limpiar tabla
+
+            visits.forEach(visit => {
+                const row = document.createElement('tr');
+                row.dataset.docId = visit.id; // Guardar ID para eliminar
+
+                const visitTime = formatTimestamp(visit.timestamp);
+                const timeAgo = getTimeAgo(visit.timestamp?.toDate());
+                const deviceType = getDeviceType(visit.userAgent || '');
+                const displayUrl = formatPageUrl(visit.pageVisited);
+
+                row.innerHTML = `
+                    <td>
+                        <div>${visitTime}</div>
+                        <div class="time-ago">${timeAgo}</div>
+                    </td>
+                    <td class="data-cell-id">${visit.visitorId || 'N/A'}</td>
+                    <td class="data-cell">
+                         <div>${displayUrl}</div>
+                         ${visit.pageTitle ? `<div class="time-ago" title="${visit.pageTitle}">${truncateText(visit.pageTitle, 50)}</div>` : ''}
+                    </td>
+                    <td>
+                        <span class="platform-badge">${deviceType}</span>
+                        <div class="time-ago">${visit.platform || ''}</div>
+                    </td>
+                    <td class="data-cell-small">${visit.referrer || 'Directo'}</td>
+                    <td class="action-cell">
+                        <button class="danger delete-button" data-id="${visit.id}">Eliminar</button>
+                    </td>
+                `;
+                visitorTableBody.appendChild(row);
+            });
+
+            // Añadir listeners a los botones de eliminar
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', handleDeleteVisit);
+            });
+        }
+
+        function renderGroupedTable(visits) {
+             setTableHeaders('grouped');
+             visitorTableBody.innerHTML = ''; // Limpiar tabla
+
+             if (!visits || visits.length === 0) {
+                 loadingStatus.textContent = 'No hay visitas para agrupar.';
+                 loadingStatus.style.display = 'block';
+                 return;
+             }
+
+             // Agrupar visitas por visitorId en el cliente
+             const grouped = visits.reduce((acc, visit) => {
+                 const id = visit.visitorId || 'ID_Desconocido';
+                 if (!acc[id]) {
+                     acc[id] = {
+                         count: 0,
+                         lastSeen: null,
+                         firstSeen: null,
+                         pages: new Set(),
+                         devices: new Set()
+                     };
+                 }
+                 acc[id].count++;
+                 const visitDate = visit.timestamp?.toDate();
+                 if (visitDate) {
+                     if (!acc[id].lastSeen || visitDate > acc[id].lastSeen) {
+                         acc[id].lastSeen = visitDate;
+                     }
+                      if (!acc[id].firstSeen || visitDate < acc[id].firstSeen) {
+                         acc[id].firstSeen = visitDate;
+                     }
+                 }
+                 if(visit.pageVisited) acc[id].pages.add(formatPageUrl(visit.pageVisited));
+                 if(visit.userAgent) acc[id].devices.add(getDeviceType(visit.userAgent));
+
+                 return acc;
+             }, {});
+
+             // Convertir objeto agrupado a array y ordenar (opcional)
+              const groupedArray = Object.entries(grouped).map(([visitorId, data]) => ({
+                  visitorId,
+                  ...data
+              }));
+
+             // Ordenar por última visita (más reciente primero) - opcional
+              groupedArray.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+
+
+             groupedArray.forEach(group => {
+                 const row = document.createElement('tr');
+                 const lastSeenStr = group.lastSeen ? group.lastSeen.toLocaleString() : 'N/A';
+                 const timeAgo = group.lastSeen ? getTimeAgo(group.lastSeen) : '';
+                 const firstSeenStr = group.firstSeen ? group.firstSeen.toLocaleString() : 'N/A';
+
+                 row.innerHTML = `
+                     <td class="data-cell-id">${group.visitorId}</td>
+                     <td>${group.count}</td>
+                     <td>
+                         <div>${lastSeenStr}</div>
+                         <div class="time-ago">${timeAgo}</div>
+                     </td>
+                     <td>${firstSeenStr}</td>
+                     <td class="data-cell">${Array.from(group.pages).slice(0, 3).join('<br>')} ${group.pages.size > 3 ? '...' : ''}</td>
+                     <td>${Array.from(group.devices).join(', ')}</td>
+                 `;
+                 visitorTableBody.appendChild(row);
+             });
+         }
+
+        function setTableHeaders(viewMode) {
+             if (viewMode === 'visits') {
+                 tableHeaderRow.innerHTML = `
+                     <th>Fecha y Hora</th>
+                     <th>ID Visitante</th>
+                     <th>Página Visitada</th>
+                     <th>Dispositivo</th>
+                     <th>Referencia</th>
+                     <th>Acciones</th>
+                 `;
+             } else { // grouped view
+                  tableHeaderRow.innerHTML = `
+                     <th>ID Visitante</th>
+                     <th>Visitas</th>
+                     <th>Última Visita</th>
+                     <th>Primera Visita</th>
+                     <th>Páginas (ej.)</th>
+                     <th>Dispositivos</th>
+                 `;
+             }
+        }
+
+        function updatePagination(currentPageSize) {
+            paginationElement.innerHTML = ''; // Limpiar
+
+            // Botón Anterior (Simplificado: vuelve a la primera página si no es la primera)
+            const prevButton = document.createElement('button');
+            prevButton.textContent = '← Anterior';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                 // La paginación hacia atrás real es compleja.
+                 // Por ahora, simplemente volvemos a cargar la página 1 si se intenta ir atrás.
+                 // O podrías intentar implementar lógica con endBefore si guardas firstVisibleDoc.
+                 currentPage = Math.max(1, currentPage - 1); // Actualiza el número de página visualmente
+                 loadVisitors(currentPage === 1, 'current'); // Recarga (simplificado)
+            });
+           // paginationElement.appendChild(prevButton); // Deshabilitado por complejidad
+
+            // Número de página actual
+            const currentPageSpan = document.createElement('button');
+            currentPageSpan.textContent = currentPage;
+            currentPageSpan.classList.add('active');
+            currentPageSpan.disabled = true;
+            paginationElement.appendChild(currentPageSpan);
+
+            // Botón Siguiente
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Siguiente →';
+            // Deshabilitar si la consulta devolvió menos documentos que PAGE_SIZE
+            // O si lastVisibleDoc es null (indicando explícitamente que no hay más)
+            nextButton.disabled = currentPageSize < PAGE_SIZE || !lastVisibleDoc;
+            nextButton.addEventListener('click', () => {
+                currentPage++;
+                loadVisitors(false, 'next');
+            });
+            paginationElement.appendChild(nextButton);
+        }
+
+
+        // --- MANEJO DE EVENTOS Y ACCIONES ---
+
+        function resetFiltersAndLoad() {
+            startDateInput.value = '';
+            endDateInput.value = '';
+            monthYearInput.value = '';
+            // sortBySelect.value = 'timestamp_desc'; // Opcional: resetear orden
+            loadVisitors(true); // Cargar primera página sin filtros
+        }
+
+        function toggleView() {
+            if (currentViewMode === 'visits') {
+                currentViewMode = 'grouped';
+                toggleViewButton.textContent = 'Ver por Visita';
+                // La vista agrupada no usa paginación de la misma manera
+                paginationElement.style.display = 'none';
+                // Recargar y renderizar en modo agrupado (puede requerir cargar todos los datos filtrados)
+                 loadAndRenderGrouped();
+
+            } else {
+                currentViewMode = 'visits';
+                toggleViewButton.textContent = 'Ver por Visitante';
+                paginationElement.style.display = 'flex';
+                // Volver a cargar la vista de visitas (probablemente la página actual)
+                loadVisitors(false, 'current');
+            }
+        }
+
+        async function loadAndRenderGrouped() {
+             loadingStatus.textContent = 'Cargando y agrupando visitas...';
+             loadingStatus.style.display = 'block';
+             visitorTableContainer.style.display = 'none';
+             try {
+                 const visitsRef = collection(db, "visits");
+                 let constraints = [];
+                 currentFilters = getAppliedFilters();
+
+                 if (currentFilters.startDate) constraints.push(where('timestamp', '>=', currentFilters.startDate));
+                 if (currentFilters.endDate) {
+                     const nextDay = new Date(currentFilters.endDate.toDate());
+                     nextDay.setDate(nextDay.getDate() + 1);
+                     constraints.push(where('timestamp', '<', Timestamp.fromDate(nextDay)));
+                 }
+                 // No aplicamos limit ni paginación aquí para agrupar todo
+                 // ¡CUIDADO! Esto puede cargar MUCHOS datos.
+                 const visitsQuery = query(visitsRef, ...constraints);
+                 const querySnapshot = await getDocs(visitsQuery);
+
+                 const allFilteredVisits = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                 if (allFilteredVisits.length === 0) {
+                     loadingStatus.textContent = 'No se encontraron visitas con los filtros aplicados.';
+                      visitorTableBody.innerHTML = '';
+                     return;
+                 }
+
+                 renderGroupedTable(allFilteredVisits);
+                 visitorTableContainer.style.display = 'block';
+                 loadingStatus.style.display = 'none';
+
+             } catch (error) {
+                 handleError("Error al cargar datos para agrupar", error, loadingStatus);
+             }
+        }
+
+
+        async function handleDeleteVisit(event) {
+            const button = event.target;
+            const docId = button.dataset.id;
+
+            if (!docId) {
+                console.error("No se encontró ID del documento para eliminar.");
+                return;
+            }
+
+            // --- ¡¡ADVERTENCIA DE SEGURIDAD!! ---
+            // Esta acción elimina datos directamente. Asegúrate de que tus reglas
+            // de Firestore restrinjan quién puede hacer esto en producción.
+            if (confirm(`¿Estás seguro de que quieres eliminar esta visita (ID: ${docId})?\n¡ESTA ACCIÓN ES IRREVERSIBLE Y REQUIERE REGLAS DE SEGURIDAD ADECUADAS!`)) {
+                try {
+                    button.disabled = true; // Deshabilitar botón mientras se elimina
+                    button.textContent = 'Eliminando...';
+
+                    const visitDocRef = doc(db, "visits", docId);
+                    await deleteDoc(visitDocRef);
+
+                    console.log("Visita eliminada con éxito:", docId);
+
+                    // Eliminar la fila de la tabla visualmente
+                    const row = button.closest('tr');
+                    if (row) {
+                        row.remove();
+                    }
+
+                    // Opcional: Recargar estadísticas o la página actual para reflejar el cambio
+                    // await loadGlobalStats(); // Podría ser costoso recargar todo
+                    // Podrías simplemente decrementar contadores si es necesario
+
+                } catch (error) {
+                    handleError(`Error al eliminar visita ${docId}`, error);
+                    alert(`Error al eliminar: ${error.message}`); // Informar al usuario
+                    button.disabled = false; // Rehabilitar botón si falla
+                    button.textContent = 'Eliminar';
+                }
+            }
+        }
+
+        // --- UTILIDADES ---
+
+        function getAppliedFilters() {
+            const filters = {};
+            // Filtro por rango de fechas
+            if (startDateInput.value) {
+                filters.startDate = Timestamp.fromDate(new Date(startDateInput.value + 'T00:00:00')); // Inicio del día
+            }
+            if (endDateInput.value) {
+                 // Asegura que la fecha final incluya todo el día
+                 const end = new Date(endDateInput.value + 'T00:00:00');
+                 // No necesitamos ir al final del día si usamos '<' al día siguiente en la consulta
+                 filters.endDate = Timestamp.fromDate(end);
+            }
+
+            // Filtro por mes/año (sobrescribe rango si se usa)
+            if (monthYearInput.value) {
+                 const [year, month] = monthYearInput.value.split('-').map(Number);
+                 const startOfMonth = new Date(year, month - 1, 1); // Meses son 0-indexados
+                 const endOfMonth = new Date(year, month, 0); // Último día del mes
+                 endOfMonth.setHours(23, 59, 59, 999); // Final del día
+
+                 filters.startDate = Timestamp.fromDate(startOfMonth);
+                 // Ajustamos endDate para la consulta con '<' al día siguiente
+                 const startOfNextMonth = new Date(year, month, 1);
+                 filters.endDate = Timestamp.fromDate(startOfNextMonth); // Usaremos '<' startOfNextMonth
+
+                 // Limpiar inputs de rango si se usa mes/año
+                 startDateInput.value = '';
+                 endDateInput.value = '';
+            }
+
+
+            return filters;
+        }
+
+
+        function formatTimestamp(timestamp) {
+            if (timestamp && typeof timestamp.toDate === 'function') {
+                try {
+                    return timestamp.toDate().toLocaleString();
+                } catch (e) {
+                     console.warn("Error formateando timestamp:", timestamp, e);
+                     return 'Fecha inválida';
+                }
+            } else if (timestamp) {
+                 // Intentar convertir si es número o string
+                 try {
+                      const date = new Date(timestamp);
+                      if (!isNaN(date)) return date.toLocaleString();
+                 } catch(e) {/* Ignora */}
+            }
+            return 'Fecha no disponible';
+        }
+
+        function getTimeAgo(date) {
+             if (!date || !(date instanceof Date)) return ''; // Necesita un objeto Date
+
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (isNaN(seconds) || seconds < 0) return ''; // Evitar NaN o fechas futuras
+
+            const intervals = [
+                { label: 'año', seconds: 31536000 },
+                { label: 'mes', seconds: 2592000 },
+                { label: 'día', seconds: 86400 },
+                { label: 'hora', seconds: 3600 },
+                { label: 'minuto', seconds: 60 },
+                { label: 'segundo', seconds: 1 }
+            ];
+
+            for (let interval of intervals) {
+                const count = Math.floor(seconds / interval.seconds);
+                if (count >= 1) {
+                    const plural = count === 1 ? '' : 's';
+                    return `hace ${count} ${interval.label}${plural}`;
+                }
+            }
+            return 'justo ahora';
+        }
+
+        function getDeviceType(userAgent) {
+            if (!userAgent) return 'N/A';
+            if (/mobile|iphone|ipod|android|blackberry|windows phone/i.test(userAgent)) return 'Móvil';
+            if (/tablet|ipad|android 3/i.test(userAgent)) return 'Tablet'; // Android 3 era principalmente tablet
+            if (/windows/i.test(userAgent)) return 'Windows';
+            if (/macintosh|mac os x/i.test(userAgent)) return 'Mac';
+            if (/linux/i.test(userAgent)) return 'Linux';
+            if (/cros/i.test(userAgent)) return 'ChromeOS'; // Chromebook
+            return 'Desktop/Otro';
+        }
+
+         function formatPageUrl(pageUrl) {
+             if (!pageUrl || pageUrl === 'N/A') return 'N/A';
+             try {
+                 const url = new URL(pageUrl);
+                 let path = `${url.pathname}${url.search}${url.hash}`;
+                 // Quitar slash inicial si solo es eso
+                 if (path.length > 1 && path.startsWith('/')) {
+                     path = path.substring(1);
+                 }
+                 // Si el path está vacío, mostrar solo el host
+                 return path || url.hostname;
+             } catch (e) {
+                 // Si no es una URL válida, devolverla tal cual (podría ser una ruta relativa)
+                 return pageUrl;
+             }
+         }
+
+         function truncateText(text, maxLength) {
+             if (!text) return '';
+             if (text.length <= maxLength) return text;
+             return text.substring(0, maxLength) + '...';
+         }
+
+        function handleError(context, error, ...elementsToUpdate) {
+             console.error(context + ":", error);
+             const errorMsg = `Error: ${error.message || 'Desconocido'}`;
+             if (elementsToUpdate.length > 0) {
+                 elementsToUpdate.forEach(el => {
+                     if (el) el.textContent = errorMsg;
+                 });
+             } else if (loadingStatus) {
+                 loadingStatus.textContent = `${context}. ${errorMsg}`;
+                 loadingStatus.style.display = 'block'; // Asegurarse que sea visible
+             }
+             // Podrías añadir un sistema de notificaciones más robusto aquí
+         }
+
+    </script>
+</body>
+</html>

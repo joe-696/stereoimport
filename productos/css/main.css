@@ -1,0 +1,30 @@
+/* Stereo Importaciones - Styles Modulares
+   Estructura CSS organizada por componentes
+   ========================================== */
+
+/* 1. Base - Configuración fundamental */
+@import 'base/reset.css';
+@import 'base/variables.css';
+@import 'base/utilities.css';
+
+/* 2. Layout - Estructura principal */
+@import 'layout/sections.css';
+
+/* 3. Componentes - Elementos reutilizables */
+@import 'components/header.css';
+@import 'components/search.css';
+@import 'components/banner.css';
+@import 'components/products.css';
+@import 'components/cart.css';
+@import 'components/checkout.css';
+@import 'components/toast.css';
+@import 'components/whatsapp.css';
+
+/* 4. Estados - Loading, errores, etc. */
+@import 'states/loading.css';
+
+/* 5. Responsive - Media queries */
+@import 'responsive/media-queries.css';
+
+/* Nota: Este archivo reemplaza el styles.css original
+   y proporciona una arquitectura CSS modular y escalable */

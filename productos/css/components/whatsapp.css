@@ -1,0 +1,53 @@
+/* Componente WhatsApp Float */
+.whatsapp-float {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    background: var(--success-color);
+    color: var(--text-white);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-2xl);
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    transition: transform var(--transition-normal);
+    z-index: var(--z-whatsapp);
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+}
+
+.whatsapp-float__tooltip {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-dark);
+    color: var(--text-white);
+    padding: var(--spacing-sm) 12px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+}
+
+.whatsapp-float:hover .whatsapp-float__tooltip {
+    opacity: 1;
+}
+
+.whatsapp-float__tooltip::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin-top: -5px;
+    border: 5px solid transparent;
+    border-left-color: var(--bg-dark);
+}

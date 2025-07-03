@@ -1,0 +1,102 @@
+/* Responsive Design - Media Queries */
+
+/* Mobile First Approach */
+@media (max-width: 480px) {
+    :root {
+        --font-4xl: 1.8rem;
+        --font-3xl: 1.6rem;
+        --font-2xl: 1.4rem;
+    }
+    
+    .container {
+        width: 95%;
+    }
+    
+    /* Ajustes específicos para móviles pequeños */
+    .header__cart-button {
+        font-size: 1.5rem;
+    }
+    
+    .section-title__heading {
+        font-size: var(--font-3xl);
+    }
+    
+    .banner {
+        margin: var(--spacing-sm) 0;
+    }
+      .products {
+        gap: var(--spacing-md);
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: var(--font-xl);
+    }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+    .section-title__heading {
+        font-size: var(--font-3xl);
+    }
+    
+    .products {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+/* Desktop pequeño */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .products {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Desktop grande */
+@media (min-width: 1025px) {
+    .container {
+        max-width: var(--breakpoint-xl);
+    }
+    
+    .products {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}
+
+/* Orientación landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .banner {
+        height: 80vh;
+    }
+    
+    .cart-modal {
+        height: 100vh;
+    }
+}
+
+/* Preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    :root {
+        --border-light: #000000;
+        --text-secondary: #000000;
+        --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.5);
+        --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Modo oscuro deshabilitado: los colores siempre serán los definidos en variables.css */

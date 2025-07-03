@@ -1,0 +1,131 @@
+/* Componente Checkout Modal */
+.checkout-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-overlay);
+    z-index: calc(var(--z-modal) * 2);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-modal-overlay--open {
+    display: flex;
+}
+
+.checkout-modal {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xxl);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.checkout-modal__close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
+    font-size: var(--font-2xl);
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+}
+
+.checkout-modal__close:hover {
+    color: var(--text-primary);
+}
+
+.checkout-modal__title {
+    margin: 0 0 var(--spacing-lg);
+    font-size: var(--font-2xl);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.checkout-form__group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.checkout-form__label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+}
+
+.checkout-form__input,
+.checkout-form__select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-base);
+    outline: none;
+    transition: border-color var(--transition-normal);
+}
+
+.checkout-form__input:focus,
+.checkout-form__select:focus {
+    border-color: var(--primary-color);
+}
+
+.checkout-form__radio-group {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+}
+
+.checkout-form__radio-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.checkout-form__radio {
+    margin: 0;
+}
+
+.checkout-form__submit {
+    width: 100%;
+    background: var(--gradient-primary);
+    color: var(--text-white);
+    border: none;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    font-size: var(--font-lg);
+    margin-top: var(--spacing-lg);
+    transition: transform var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.checkout-form__submit:hover {
+    transform: translateY(-2px);
+}
+
+/* Media Queries para Checkout Modal */
+@media (max-width: 768px) {
+    .checkout-modal {
+        width: 95%;
+        padding: var(--spacing-lg);
+    }
+    
+    .checkout-form__radio-group {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+}

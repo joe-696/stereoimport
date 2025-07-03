@@ -1,0 +1,42 @@
+/* Loader Component */
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-loader);
+    transition: var(--transition);
+}
+
+.loader-content {
+    text-align: center;
+    color: var(--color-white);
+}
+
+.loader-logo {
+    width: 120px;
+    height: 120px;
+    margin-bottom: var(--spacing-lg);
+    animation: loaderPulse 2s ease-in-out infinite;
+}
+
+.loader-text {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-medium);
+    animation: loaderText 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes loaderText {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}

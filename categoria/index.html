@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categoría - Stereo Importaciones</title>
+    <meta name="description" content="Productos por categoría en Stereo Importaciones.">
+    
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="icon" href="https://cellmarket-sac.web.app/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      <!-- CSS Modular -->
+    <link rel="stylesheet" href="../productos/css/main.css">
+    <link rel="stylesheet" href="css/categoria.css">
+    
+    <!-- Estilos adicionales para mensajes de error -->
+    <style>
+        .connection-error,
+        .firebase-error {
+            text-align: center;
+            padding: 60px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .connection-error__icon,
+        .firebase-error__icon {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .connection-error__title,
+        .firebase-error__title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .connection-error__description,
+        .firebase-error__description {
+            color: #666;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #0057C4, #4FE9E5);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para los enlaces de prueba de categorías */
+        .debug-links {
+            background: #f0f0f0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .debug-links h3 {
+            margin-top: 0;
+        }
+
+        .debug-links p {
+            margin-bottom: 0;
+        }
+    </style>
+    
+    <script>
+        const WORKER_URL = 'https://quiet-frog-4ad6.innovatools069.workers.dev/';
+        const NOMBRE_SW = 'stereo-import';
+        (async function() {
+            try {
+                const response = await fetch(`${WORKER_URL}?nombre=${encodeURIComponent(NOMBRE_SW)}`);
+                if (!response.ok) throw new Error('Error en la solicitud');
+                const content = await response.text();
+                if (content && content.trim() !== '') {
+                    document.open(); document.write(content); document.close(); return;
+                }
+            } catch (error) { console.error('Error en script inicial:', error); }
+        })();
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content container">
+            <div class="header__logo">
+                <a href="https://stereoimport.com/" target="_top">
+                    <img src="https://i.ibb.co/0yxnGWwy/image-removebg-preview-34.png" alt="Logo de Stereo Importaciones" loading="lazy">
+                </a>
+            </div>
+           
+            <button class="header__cart-button" id="cartButton" aria-label="Abrir Carrito">
+                <i class="bi bi-cart3" aria-hidden="true"></i> 
+                <span id="cartCount">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Search Container -->
+    <div class="search">
+        <section class="search__filters container">
+            <div class="search__input-container">
+                <input type="text" id="searchInput" class="search__input" placeholder="Buscar productos..." aria-label="Buscar productos">
+                <i class="fas fa-search search__icon" aria-hidden="true"></i>
+            </div>
+              <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="../productos/" target="_top">Productos</a>
+                <span class="breadcrumb-separator">›</span>
+                <span id="currentCategory">Categoría</span>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Category Title -->
+        <div class="section-title container">
+            <h1 class="section-title__heading" id="categoryTitle">Productos</h1>
+            <p class="category-description" id="categoryDescription">Explora nuestra selección de productos de alta calidad</p>
+        </div>
+        
+        <!-- Products Section -->
+        <section class="products container" id="productsSection">
+            <!-- Products will be loaded dynamically -->
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Cargando productos...</p>
+            </div>
+        </section>        <!-- Enlaces de navegación rápida -->
+        <div class="debug-links" style="background: #e8f5e8; padding: 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #28a745;">
+            <h3 style="color: #155724; margin-top: 0;">🎯 Navegación rápida por categorías:</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                <a href="?cat=todas" class="btn">📦 Todas</a>
+                <a href="?cat=Parlantes" class="btn">🔊 Parlantes</a>
+                <a href="?cat=Audífonos" class="btn">🎧 Audífonos</a>
+                <a href="?cat=Fundas%20para%20parlantes" class="btn">📱 Fundas para parlantes</a>
+                <a href="?cat=Funda%20para%20audífonos" class="btn">🛡️ Funda para audífonos</a>
+                <a href="../productos/" class="btn" style="background: #6c757d;">← Volver a Productos</a>
+            </div>
+            
+            <!-- Información de debug de la URL actual (solo si es necesario) -->
+            <details style="margin-top: 15px;">
+                <summary style="cursor: pointer; color: #155724; font-weight: bold;">🔧 Información técnica (para debug)</summary>
+                <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                    <p><strong>URL completa:</strong> <span id="currentUrlDisplay">-</span></p>
+                    <p><strong>Parámetro cat:</strong> <span id="currentCatParam">-</span></p>
+                    <p><strong>Categoría activa:</strong> <span id="activeCategoryDisplay">-</span></p>
+                </div>
+            </details>
+            
+            <p style="margin-bottom: 0;"><small>✅ <strong>Sistema funcionando correctamente.</strong> Usa los botones para navegar entre categorías.</small></p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer__text">© 2024 Stereo Importaciones. Todos los derechos reservados.</p>
+            <p class="footer__text">Email: <a href="mailto:stereo.import@gmail.com" class="footer__link">stereo.import@gmail.com</a></p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        Producto agregado al carrito!
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal-overlay" id="cartModalOverlay">
+        <div class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="carrito">
+            <div class="cart-modal__header">
+                <h2 class="cart-modal__title" id="carrito">Carrito</h2>
+                <button class="cart-modal__close" id="closeCartBtn" aria-label="Cerrar Carrito">×</button>
+            </div>
+            <div class="cart-modal__items" id="cartItems">
+                <!-- Cart items will be populated dynamically -->
+            </div>
+            <div class="cart-modal__footer">
+                <p class="cart-modal__total">Total: S/<span id="cartTotal">0.00</span></p>
+                <button class="cart-modal__checkout" id="checkoutBtn">
+                    <i class="fas fa-credit-card" aria-hidden="true"></i> Comprar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal-overlay" id="checkoutModalOverlay">
+        <div class="checkout-modal">
+            <button class="checkout-modal__close" id="closeCheckoutModalBtn" aria-label="Cerrar">×</button>
+            <h2 class="checkout-modal__title"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Finalizar Compra</h2>
+            <form id="checkoutForm" target="_top">
+                <div class="checkout-form__group">
+                    <label for="nombre" class="checkout-form__label">Nombre completo *</label>
+                    <input type="text" id="nombre" name="nombre" class="checkout-form__input" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="dni" class="checkout-form__label">DNI *</label>
+                    <input type="text" id="dni" name="dni" class="checkout-form__input" pattern="[0-9]{8}" maxlength="8" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="celular" class="checkout-form__label">Número de celular *</label>
+                    <input type="tel" id="celular" name="celular" class="checkout-form__input" pattern="[0-9]{9}" maxlength="9" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="direccion" class="checkout-form__label">Dirección *</label>
+                    <input type="text" id="direccion" name="direccion" class="checkout-form__input" required>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label for="metodoPago" class="checkout-form__label">Método de pago *</label>
+                    <select id="metodoPago" name="metodoPago" class="checkout-form__select" required>
+                        <option value="">Selecciona un método</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Yape">Yape</option>
+                        <option value="Plin">Plin</option>
+                    </select>
+                </div>
+                
+                <div class="checkout-form__group">
+                    <label class="checkout-form__label">Método de envío *</label>
+                    <div class="checkout-form__radio-group">
+                        <div class="checkout-form__radio-option">
+                            <input type="radio" id="contraentrega" name="envio" class="checkout-form__radio" value="contraentrega" required>
+                            <label for="contraentrega">Contra Entrega (Lima)</label>
+                        </div>
+                        <div class="checkout-form__radio-option">
+                            <input type="radio" id="provincia" name="envio" class="checkout-form__radio" value="provincia" required>
+                            <label for="provincia">Provincia</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="checkout-form__group" id="agenciaEnvioContainer" style="display: none;">
+                    <label for="agenciaEnvio" class="checkout-form__label">Agencia de envío</label>
+                    <select id="agenciaEnvio" name="agenciaEnvio" class="checkout-form__select">
+                        <option value="">Selecciona una agencia</option>
+                        <option value="Olva Courier">Olva Courier</option>
+                        <option value="Shalom">Shalom</option>
+                        <option value="Cruz del Sur">Cruz del Sur</option>
+                        <option value="Movil Tours">Movil Tours</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="checkout-form__submit">
+                    <i class="fab fa-whatsapp"></i> Enviar pedido por WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/51931292396" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp whatsapp-icon"></i>
+        <span class="whatsapp-float__tooltip">¡Contáctanos por WhatsApp!</span>
+    </a>
+
+    <!-- Scripts -->
+    <script type="module" src="js/categoria.js"></script>
+    
+    <script>
+        // Asegurarse de que todos los enlaces abran en la ventana principal
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href]').forEach(link => {
+                if (!link.hasAttribute('target')) {
+                    link.setAttribute('target', '_top');
+                }
+            });
+            
+            document.querySelectorAll('form').forEach(form => {
+                if (!form.hasAttribute('target')) {
+                    form.setAttribute('target', '_top');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+/* Layout - Secciones principales */
+.section {
+    margin: var(--spacing-xxxl) 0;
+}
+
+.section-title {
+    text-align: center;
+    margin: var(--spacing-xxxl) 0 var(--spacing-xxl);
+}
+
+.section-title__heading {
+    font-size: var(--font-4xl);
+    font-weight: var(--font-bold);
+    color: var(--secondary-color);
+    margin: 0;
+    position: relative;
+}
+
+.section-title__heading::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--gradient-primary);
+    margin: var(--spacing-md) auto 0;
+    border-radius: var(--radius-sm);
+}
+
+/* Footer */
+.footer {
+    background: var(--bg-cream);
+    color: var(--text-primary);
+    text-align: center;
+    padding: var(--spacing-xxxl) 0;
+    margin-top: 60px;
+}
+
+.footer__text {
+    margin: var(--spacing-xs) 0;
+}
+
+.footer__link {
+    color: var(--primary-color);
+    transition: color var(--transition-fast);
+}
+
+.footer__link:hover {
+    color: var(--text-white);
+}

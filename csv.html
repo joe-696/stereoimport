@@ -1,0 +1,224 @@
+CTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Productos desde CSV</title>
+    <!-- Font Awesome para íconos (Integrity y crossorigin eliminados) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        #uploadBtn {
+            background: #3182ce;
+            color: #fff;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #uploadBtn:hover {
+            background: #2c5282;
+        }
+
+        #status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #edf2f7;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        .success {
+            color: #38a169;
+        }
+
+        .error {
+            color: #e53e3e;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #uploadBtn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subir Productos desde CSV</h1>
+        <div class="form-group">
+            <label for="csvFile"><i class="fas fa-file-csv"></i> Seleccionar Archivo CSV:</label>
+            <input type="file" id="csvFile" accept=".csv">
+        </div>
+        <button id="uploadBtn"><i class="fas fa-upload"></i> Subir Productos</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- PapaParse para analizar CSV (Integrity eliminado) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    <!-- Script personalizado para manejar la carga (type="module") -->
+    <script type="module">
+        // Importar las funciones necesarias de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+            authDomain: "sagitariojbl1.firebaseapp.com",
+            projectId: "sagitariojbl1",
+            storageBucket: "sagitariojbl1.firebasestorage.app",
+            messagingSenderId: "424267774202",
+            appId: "1:424267774202:web:0be71a6adeacfe434f3143",
+            measurementId: "G-GGHQL53GT3"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtener elementos del DOM
+        const uploadBtn = document.getElementById('uploadBtn');
+        const csvFileInput = document.getElementById('csvFile');
+        const statusDiv = document.getElementById('status');
+
+        // Función para mostrar mensajes en el estado
+        function appendStatus(message, type) {
+            const div = document.createElement('div');
+            div.textContent = message;
+            div.className = type;
+            statusDiv.appendChild(div);
+            // Auto-scroll al final
+            statusDiv.scrollTop = statusDiv.scrollHeight;
+        }
+
+        // Evento de clic en el botón de carga
+        uploadBtn.addEventListener('click', () => {
+            const file = csvFileInput.files[0];
+            if (!file) {
+                alert("Por favor, selecciona un archivo CSV.");
+                return;
+            }
+
+            // Limpiar el estado anterior
+            statusDiv.innerHTML = "";
+
+            // Usar PapaParse para analizar el CSV
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: async function(results) {
+                    const data = results.data;
+                    let successCount = 0;
+                    let errorCount = 0;
+
+                    for (let i = 0; i < data.length; i++) {
+                        const row = data[i];
+                        const descripcion = row['Descripción'] ? row['Descripción'].trim() : "";
+                        const marca = row['marca'] ? row['marca'].trim() : "";
+                        const modelo = row['modelo'] ? row['modelo'].trim() : "";
+
+                        // Validar los campos
+                        if (!descripcion || !marca || !modelo) {
+                            appendStatus(`Fila ${i + 2}: Campos incompletos. Se omitió.`, 'error');
+                            errorCount++;
+                            continue;
+                        }
+
+                        // Crear el objeto del producto con el mapeo correcto
+                        const producto = {
+                            description: descripcion, // 'Descripción' -> 'description'
+                            sagitario: marca,          // 'marca' -> 'sagitario'
+                            title: modelo              // 'modelo' -> 'title'
+                            // Puedes agregar más campos aquí si es necesario
+                        };
+
+                        try {
+                            await addDoc(collection(db, "products"), producto);
+                            appendStatus(`Fila ${i + 2}: Producto agregado exitosamente.`, 'success');
+                            successCount++;
+                        } catch (error) {
+                            console.error(`Error al agregar el producto en la fila ${i + 2}:`, error);
+                            appendStatus(`Fila ${i + 2}: Error al agregar el producto.`, 'error');
+                            errorCount++;
+                        }
+
+                        // Opcional: Añadir una pequeña pausa para evitar sobrecarga
+                        await new Promise(resolve => setTimeout(resolve, 100)); // Pausa de 100ms
+                    }
+
+                    // Resumen de la carga
+                    appendStatus(`<hr>`, '');
+                    appendStatus(`Total: ${data.length} | Éxitos: ${successCount} | Errores: ${errorCount}`, '');
+                },
+                error: function(error) {
+                    console.error("Error al analizar el archivo CSV:", error);
+                    appendStatus(`Error al analizar el archivo CSV.`, 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

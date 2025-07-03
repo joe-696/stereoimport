@@ -1,0 +1,104 @@
+/* Componente Search */
+.search {
+    position: sticky;
+    top: 69px;
+    z-index: var(--z-search);
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--spacing-md) 0;
+}
+
+.search__filters {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search__input-container {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search__input {
+    width: 100%;
+    padding: 12px 40px 12px var(--spacing-md);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    font-size: var(--font-base);
+    outline: none;
+    transition: border-color var(--transition-normal);
+}
+
+.search__input:focus {
+    border-color: var(--primary-color);
+}
+
+.search__icon {
+    position: absolute;
+    right: var(--spacing-md);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.search__suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.search__suggestion-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-lighter);
+    transition: background-color var(--transition-fast);
+}
+
+.search__suggestion-item:hover {
+    background-color: var(--bg-primary);
+}
+
+.search__suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.search__category-filter {
+    padding: 12px var(--spacing-md);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    font-size: var(--font-base);
+    outline: none;
+    background: var(--bg-white);
+    min-width: 200px;
+    transition: border-color var(--transition-normal);
+}
+
+.search__category-filter:focus {
+    border-color: var(--primary-color);
+}
+
+/* Media Queries para Search */  
+@media (max-width: 768px) {
+    .search__filters {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .search__input-container {
+        min-width: 100%;
+    }
+    
+    .search__category-filter {
+        min-width: 100%;
+    }
+}

@@ -1,0 +1,47 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "**/*.js",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "text/javascript; charset=utf-8"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "!/shared/**",
+        "destination": "/productos/index.html"
+      },
+      {
+        "source": "!/productos/js/**",
+        "destination": "/productos/index.html"
+      },
+      {
+        "source": "!/categoria/js/**",
+        "destination": "/productos/index.html"
+      },
+      {
+        "source": "!/show/js/**",
+        "destination": "/productos/index.html"
+      },
+      {
+        "source": "!/productos/css/**",
+        "destination": "/productos/index.html"
+      },
+      {
+        "source": "**",
+        "destination": "/productos/index.html"
+      }
+    ]
+  }
+}

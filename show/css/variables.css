@@ -1,0 +1,42 @@
+/* Variables CSS globales */
+:root {
+    --primary-color: #0057C4;
+    --secondary-color: #4FE9E5;
+    --whatsapp-color: #25D366;
+    --error-color: #e74c3c;
+    --success-color: #27ae60;
+    --text-color: #333;
+    --text-muted: #555;
+    --text-light: #888;
+    --border-color: #eee;
+    --border-light: #ccc;
+    --background-color: #f8f9fa;
+    --white: #ffffff;
+    --shadow-light: 0 2px 5px rgba(0,0,0,0.1);
+    --shadow-medium: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-heavy: 0 15px 40px rgba(0,0,0,0.2);
+    --border-radius: 8px;
+    --border-radius-small: 4px;
+    --border-radius-large: 16px;
+    --transition: all 0.3s ease;
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* Reset y base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--background-color);
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+}

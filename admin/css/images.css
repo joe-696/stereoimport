@@ -1,0 +1,91 @@
+/* Estilos para componentes de imagen */
+
+.imgbb-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.image-uploads-container {
+    width: 100%;
+}
+
+.upload-preview {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upload-preview img {
+    max-width: 60px;
+    max-height: 60px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.upload-preview .file-name {
+    font-size: 0.8rem;
+    color: #718096;
+}
+
+.add-image-btn {
+    margin-top: 0.5rem;
+    background: #a0aec0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-image-btn:hover {
+    background: #718096;
+}
+
+.image-item {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    position: relative;
+}
+
+.remove-image {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #e53e3e;
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.remove-image:hover {
+    background: #c53030;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.image-gallery img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+}

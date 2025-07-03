@@ -1,0 +1,55 @@
+/* Componente Banner */
+.banner {
+    position: relative;
+    height: 50vh;
+    min-height: 300px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    margin: var(--spacing-lg) 0;
+}
+
+.banner__image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.banner__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.banner__image--active {
+    opacity: 1;
+}
+
+.banner__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-cream);
+    color: var(--text-primary);
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.banner__title {
+    margin: 0;
+    font-size: var(--font-2xl);
+    font-weight: var(--font-semibold);
+}
+
+/* Media Queries para Banner */
+@media (max-width: 768px) {
+    .banner {
+        height: 40vh;
+        min-height: 250px;
+    }
+}
