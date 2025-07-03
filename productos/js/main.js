@@ -42,8 +42,14 @@ class StereoImportApp {
     }
 
     initializeManagers() {
+        console.log('🔧 Initializing managers...');
         this.cartManager = new CartManager();
         this.productManager = new ProductManager();
+        
+        // Conectar el cart manager con el product manager
+        this.productManager.setCartManager(this.cartManager);
+        
+        console.log('✅ Managers initialized');
     }
 
     async loadInitialData() {
@@ -78,6 +84,30 @@ class StereoImportApp {
         
         // Initialize scroll reveal
         Utils.revealOnScroll();
+        
+        // Add debug button for testing (remove in production)
+        this.addDebugTools();
+    }
+
+    // Debug tools for testing (remove in production)
+    addDebugTools() {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // Add test button after 3 seconds to allow everything to load
+            setTimeout(() => {
+                const testBtn = document.createElement('button');
+                testBtn.textContent = '🧪 Test Add to Cart';
+                testBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:9999;background:#ff6b6b;color:white;border:none;padding:10px;border-radius:5px;cursor:pointer;';
+                testBtn.onclick = () => {
+                    if (this.cartManager) {
+                        this.cartManager.addToCart('Test Product', 99.99, 'https://via.placeholder.com/150');
+                        console.log('🧪 Test product added to cart');
+                    } else {
+                        console.error('❌ CartManager not available for testing');
+                    }
+                };
+                document.body.appendChild(testBtn);
+            }, 3000);
+        }
     }
 
     initializeBannerRotation() {

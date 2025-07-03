@@ -10,6 +10,13 @@ export class ProductManager {
         this.searchSuggestions = document.getElementById('searchSuggestions');
         this.categoryFilter = document.getElementById('categoryFilter');
         this.searchTimeout = null;
+        this.cartManager = null; // Referencia al CartManager
+    }
+
+    // Establecer referencia al CartManager
+    setCartManager(cartManager) {
+        this.cartManager = cartManager;
+        console.log('🔗 CartManager linked to ProductManager');
     }
 
     // Show skeleton loading
@@ -55,17 +62,26 @@ export class ProductManager {
                 
             const productEl = document.createElement('div');
             productEl.className = 'product';
-            productEl.setAttribute('data-id', id);            productEl.innerHTML = `
+            productEl.setAttribute('data-id', id);
+            
+            // Asegurar que los datos del botón están correctos
+            const cleanTitle = String(title || '').replace(/"/g, '&quot;');
+            const cleanImage = String(image || 'https://via.placeholder.com/250');
+            const cleanPrice = Number(finalPrice || 0);
+            
+            console.log('🏷️ Rendering product:', { cleanTitle, cleanPrice, cleanImage }); // Debug log
+            
+            productEl.innerHTML = `
                 <div class="product__image-container">
-                    <img src="${image}" alt="${title}" class="product__image" loading="lazy">
+                    <img src="${cleanImage}" alt="${cleanTitle}" class="product__image" loading="lazy">
                     ${hasPromo ? '<span class="product__discount-badge">Oferta</span>' : ''}
                     <div class="product__view-details"><i class="fas fa-search-plus" aria-hidden="true"></i></div>
                 </div>
                 <div class="product__content">
-                    <h3 class="product__title">${title}</h3>
+                    <h3 class="product__title">${cleanTitle}</h3>
                     ${priceHTML}
                 </div>
-                <button class="product__add-to-cart" data-name="${title}" data-price="${finalPrice}" data-image="${image}" aria-label="Agregar ${title} al carrito">
+                <button class="product__add-to-cart" data-name="${cleanTitle}" data-price="${cleanPrice}" data-image="${cleanImage}" aria-label="Agregar ${cleanTitle} al carrito">
                     <i class="fas fa-cart-plus" aria-hidden="true"></i> Agregar
                 </button>
             `;
@@ -197,15 +213,38 @@ export class ProductManager {
             });
         }
 
-        // Product clicks - navigate to detail page
+        // Product clicks - navigate to detail page OR add to cart
         if (this.productsSection) {
             this.productsSection.addEventListener('click', (e) => {
                 const productElement = e.target.closest('.product');
-                if (productElement && !e.target.closest('.product__add-to-cart')) {
-                    const productId = productElement.getAttribute('data-id');
-                    if (productId) {
-                        this.navigateToProductDetail(productId);
+                if (!productElement) return;
+
+                // Handle add to cart button clicks
+                if (e.target.closest('.product__add-to-cart')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const button = e.target.closest('.product__add-to-cart');
+                    const name = button.getAttribute('data-name');
+                    const price = parseFloat(button.getAttribute('data-price'));
+                    const image = button.getAttribute('data-image');
+                    
+                    console.log('🛒 Product Manager - Add to cart clicked:', { name, price, image });
+                    
+                    if (this.cartManager && name && !isNaN(price)) {
+                        this.cartManager.addToCart(name, price, image);
+                    } else if (!this.cartManager) {
+                        console.error('❌ CartManager not available');
+                    } else {
+                        console.error('❌ Invalid product data:', { name, price, image });
                     }
+                    return;
+                }
+
+                // Navigate to product detail if not clicking add to cart
+                const productId = productElement.getAttribute('data-id');
+                if (productId) {
+                    this.navigateToProductDetail(productId);
                 }
             });
         }

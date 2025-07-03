@@ -80,16 +80,23 @@ export class CartManager {
     updateCartDOM() {
         this.updateCartDisplay();
         this.saveCartToLocalStorage();
-    }// Add item to cart
+    }    // Add item to cart
     addToCart(name, price, image) {
+        console.log('🛒 Adding to cart:', { name, price, image }); // Debug log
+        
         const existingItem = CartUtils.findItemByName(this.cart, name);
         
         if (existingItem) {
             existingItem.quantity += 1;
+            console.log('📦 Updated existing item quantity:', existingItem.quantity);
         } else {
             const newItem = CART_CONFIG.createCartItem(name, price, image);
             if (CartUtils.validateCartItem(newItem)) {
                 this.cart.push(newItem);
+                console.log('✅ Added new item to cart:', newItem);
+            } else {
+                console.error('❌ Invalid cart item:', newItem);
+                return;
             }
         }
         
@@ -169,6 +176,33 @@ export class CartManager {
                 }
             });
         }
+
+        // Add to cart buttons (Event delegation for dynamically created buttons)
+        // Note: Primary handling is now in ProductManager for better coordination
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.product__add-to-cart')) {
+                const button = e.target.closest('.product__add-to-cart');
+                const productSection = button.closest('#productsSection');
+                
+                // Only handle if not in products section (ProductManager handles those)
+                if (!productSection) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const name = button.getAttribute('data-name');
+                    const price = parseFloat(button.getAttribute('data-price'));
+                    const image = button.getAttribute('data-image');
+                    
+                    console.log('🛒 CartManager - Add to cart clicked (fallback):', { name, price, image });
+                    
+                    if (name && !isNaN(price)) {
+                        this.addToCart(name, price, image);
+                    } else {
+                        console.error('❌ Invalid product data:', { name, price, image });
+                    }
+                }
+            }
+        });
 
         // Cart items interactions
         if (this.cartItemsContainer) {
