@@ -186,6 +186,39 @@
             border-style: solid;
         }
 
+        .image-preview.required {
+            border-color: #ff6b6b;
+            border-width: 3px;
+        }
+
+        .image-preview.required.has-image {
+            border-color: #28a745;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .image-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .images-grid .image-preview {
+            height: 150px;
+            max-width: none;
+        }
+
         .btn {
             background: var(--primary-gradient);
             color: white;
@@ -213,6 +246,16 @@
         .btn-warning {
             background: var(--warning-color);
             color: #333;
+        }
+
+        .btn-info {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
         }
 
         .btn-sm {
@@ -470,12 +513,12 @@
                 <div>Categorías</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="totalStock">0</div>
-                <div>Stock Total</div>
+                <div class="stat-number" id="totalBrands">0</div>
+                <div>Marcas</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="lowStock">0</div>
-                <div>Stock Bajo</div>
+                <div class="stat-number" id="activeProducts">0</div>
+                <div>Productos Activos</div>
             </div>
         </div>
 
@@ -527,7 +570,8 @@
                             <option value="">Selecciona una categoría</option>
                             <option value="Parlantes">Parlantes</option>
                             <option value="Audífonos">Audífonos</option>
-                            <option value="Altavoces">Altavoces</option>
+                            <option value="Almohadillas para audífonos">Almohadillas para audífonos</option>
+                            <option value="Fundas">Fundas</option>
                             <option value="Accesorios">Accesorios</option>
                             <option value="Electrónica">Electrónica</option>
                         </select>
@@ -550,22 +594,111 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="stock">
-                            <i class="fas fa-boxes"></i> Stock Disponible
+                        <label for="sagitario">
+                            <i class="fas fa-trademark"></i> Marca
                         </label>
-                        <input type="number" id="stock" name="stock" min="0" placeholder="0" value="0">
+                        <input type="text" id="sagitario" name="sagitario" placeholder="Ej: JBL, SONY, etc.">
                     </div>
 
                     <div class="form-group">
-                        <label for="imageFile">
-                            <i class="fas fa-image"></i> Imagen del Producto
+                        <label for="imageFile1">
+                            <i class="fas fa-image"></i> Imagen Principal (Obligatoria) *
                         </label>
-                        <input type="file" id="imageFile" accept="image/*" style="display: none;">
-                        <div class="image-preview" id="imagePreview" onclick="document.getElementById('imageFile').click()">
+                        <input type="file" id="imageFile1" accept="image/*" style="display: none;">
+                        <div class="image-preview required" id="imagePreview1" onclick="document.getElementById('imageFile1').click()">
                             <div style="text-align: center; color: #666;">
-                                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                                <div>Haz clic para subir imagen</div>
-                                <small>JPG, PNG, GIF (máx. 5MB)</small>
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                <div style="font-size: 0.8rem;">Imagen obligatoria</div>
+                                <small>JPG, PNG (máx. 5MB)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-images"></i> Imágenes Adicionales (Opcionales)
+                        </label>
+                        <div class="images-grid">
+                            <div class="image-item">
+                                <input type="file" id="imageFile2" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview2" onclick="document.getElementById('imageFile2').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 2</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile3" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview3" onclick="document.getElementById('imageFile3').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 3</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile4" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview4" onclick="document.getElementById('imageFile4').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 4</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile5" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview5" onclick="document.getElementById('imageFile5').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 5</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile6" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview6" onclick="document.getElementById('imageFile6').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 6</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile7" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview7" onclick="document.getElementById('imageFile7').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 7</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile8" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview8" onclick="document.getElementById('imageFile8').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 8</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile9" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview9" onclick="document.getElementById('imageFile9').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 9</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-item">
+                                <input type="file" id="imageFile10" accept="image/*" style="display: none;">
+                                <div class="image-preview" id="imagePreview10" onclick="document.getElementById('imageFile10').click()">
+                                    <div style="text-align: center; color: #666;">
+                                        <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                        <div style="font-size: 0.8rem;">Imagen 10</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -591,12 +724,16 @@
                     <option value="">Todas las categorías</option>
                     <option value="Parlantes">Parlantes</option>
                     <option value="Audífonos">Audífonos</option>
-                    <option value="Altavoces">Altavoces</option>
+                    <option value="Almohadillas para audífonos">Almohadillas para audífonos</option>
+                    <option value="Fundas">Fundas</option>
                     <option value="Accesorios">Accesorios</option>
                     <option value="Electrónica">Electrónica</option>
                 </select>
                 <button class="btn" id="refreshProducts">
                     <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+                <button class="btn btn-success" id="downloadExcelBtn">
+                    <i class="fas fa-file-excel"></i> Descargar Excel
                 </button>
             </div>
 
@@ -608,7 +745,6 @@
                             <th>Producto</th>
                             <th>Categoría</th>
                             <th>Precio</th>
-                            <th>Stock</th>
                             <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
@@ -691,7 +827,7 @@
         let currentUser = null;
         let allProducts = [];
         let editingProduct = null;
-        let selectedImageFile = null;
+        let selectedImageFiles = {};
 
         // Referencias DOM
         const authContainer = document.getElementById('authContainer');
@@ -703,6 +839,7 @@
         const searchInput = document.getElementById('searchInput');
         const categoryFilter = document.getElementById('categoryFilter');
         const refreshProducts = document.getElementById('refreshProducts');
+        const downloadExcelBtn = document.getElementById('downloadExcelBtn');
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
@@ -718,12 +855,20 @@
 
             // Formulario
             productForm.addEventListener('submit', handleFormSubmit);
-            document.getElementById('imageFile').addEventListener('change', handleImageSelect);
+            
+            // Múltiples imágenes
+            for (let i = 1; i <= 10; i++) {
+                const imageInput = document.getElementById(`imageFile${i}`);
+                if (imageInput) {
+                    imageInput.addEventListener('change', (e) => handleImageSelect(e, i));
+                }
+            }
 
             // Filtros
             searchInput.addEventListener('input', filterProducts);
             categoryFilter.addEventListener('change', filterProducts);
             refreshProducts.addEventListener('click', loadProducts);
+            downloadExcelBtn.addEventListener('click', downloadExcel);
 
             // Validación de precio promocional
             document.getElementById('promotionalPrice').addEventListener('input', validatePromotionalPrice);
@@ -791,6 +936,9 @@
                 currentUser = user;
                 showAdminPanel();
                 updateUserInfo(user);
+                console.log('🚀 Panel de administración cargado correctamente');
+                console.log('👤 Usuario autenticado:', user.email);
+                console.log('🔧 Iniciando carga de productos...');
                 loadProducts();
                 updateStats();
             } else {
@@ -820,7 +968,7 @@
         }
 
         // Manejo de imágenes
-        function handleImageSelect(e) {
+        function handleImageSelect(e, imageIndex) {
             const file = e.target.files[0];
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
@@ -828,10 +976,15 @@
                     return;
                 }
 
-                selectedImageFile = file;
+                // Guardar el archivo en el array de imágenes seleccionadas
+                if (!selectedImageFiles) {
+                    selectedImageFiles = {};
+                }
+                selectedImageFiles[imageIndex] = file;
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const preview = document.getElementById('imagePreview');
+                    const preview = document.getElementById(`imagePreview${imageIndex}`);
                     preview.style.backgroundImage = `url(${e.target.result})`;
                     preview.classList.add('has-image');
                     preview.innerHTML = '';
@@ -866,15 +1019,36 @@
                 return;
             }
 
+            // Validar que al menos la imagen principal esté seleccionada (para productos nuevos)
+            const editProductId = document.getElementById('editProductId').value;
+            if (!editProductId && (!selectedImageFiles || !selectedImageFiles[1])) {
+                showError('La imagen principal es obligatoria');
+                return;
+            }
+
             toggleLoading(true);
 
             try {
                 const formData = new FormData(productForm);
-                let imageUrl = editingProduct?.image || 'https://via.placeholder.com/300x200?text=Sin+Imagen';
+                
+                // Preparar URLs de imágenes
+                const imageUrls = {};
+                
+                // Si es edición, mantener las imágenes existentes
+                if (editingProduct) {
+                    for (let i = 1; i <= 10; i++) {
+                        imageUrls[i] = editingProduct[`image${i === 1 ? '' : i}`] || '';
+                    }
+                }
 
-                // Subir nueva imagen si se seleccionó
-                if (selectedImageFile) {
-                    imageUrl = await uploadImageToImgBB(selectedImageFile);
+                // Subir nuevas imágenes seleccionadas
+                if (selectedImageFiles) {
+                    for (const [index, file] of Object.entries(selectedImageFiles)) {
+                        if (file) {
+                            const imageUrl = await uploadImageToImgBB(file);
+                            imageUrls[parseInt(index)] = imageUrl;
+                        }
+                    }
                 }
 
                 const productData = {
@@ -883,8 +1057,17 @@
                     category: formData.get('category'),
                     price: parseFloat(formData.get('price')),
                     promotionalPrice: formData.get('promotionalPrice') ? parseFloat(formData.get('promotionalPrice')) : null,
-                    stock: parseInt(formData.get('stock')) || 0,
-                    image: imageUrl,
+                    sagitario: formData.get('sagitario').trim() || '',
+                    image: imageUrls[1] || 'https://via.placeholder.com/300x200?text=Sin+Imagen',
+                    image2: imageUrls[2] || '',
+                    image3: imageUrls[3] || '',
+                    image4: imageUrls[4] || '',
+                    image5: imageUrls[5] || '',
+                    image6: imageUrls[6] || '',
+                    image7: imageUrls[7] || '',
+                    image8: imageUrls[8] || '',
+                    image9: imageUrls[9] || '',
+                    image10: imageUrls[10] || '',
                     updatedAt: new Date(),
                     updatedBy: currentUser.email,
                     active: true
@@ -894,8 +1077,6 @@
                 if (productData.promotionalPrice && productData.promotionalPrice >= productData.price) {
                     throw new Error('El precio promocional debe ser menor al precio regular');
                 }
-
-                const editProductId = document.getElementById('editProductId').value;
 
                 if (editProductId) {
                     // Actualizar producto existente
@@ -924,22 +1105,61 @@
         // Cargar productos
         async function loadProducts() {
             try {
-                const q = query(collection(db, 'products'), orderBy('updatedAt', 'desc'));
-                const querySnapshot = await getDocs(q);
+                console.log('🔄 Iniciando carga de productos...');
+                
+                // Cargar productos sin ordenar para adaptarse a la estructura existente
+                console.log('📦 Cargando productos de la colección "products"...');
+                const querySnapshot = await getDocs(collection(db, 'products'));
+                console.log(`✅ Productos encontrados: ${querySnapshot.size}`);
                 
                 allProducts = [];
                 querySnapshot.forEach((doc) => {
-                    allProducts.push({
+                    const data = doc.data();
+                    const productData = {
                         id: doc.id,
-                        ...doc.data()
-                    });
+                        title: data.title || 'Sin título',
+                        description: data.description || '',
+                        category: data.category || 'Sin categoría',
+                        price: data.price || 0,
+                        promotionalPrice: data.promotionalPrice || null,
+                        image: data.image || 'https://via.placeholder.com/300x200?text=Sin+Imagen',
+                        sagitario: data.sagitario || '', // Marca
+                        // Campos adicionales de imagen
+                        image2: data.image2 || '',
+                        image3: data.image3 || '',
+                        image4: data.image4 || '',
+                        image5: data.image5 || '',
+                        image6: data.image6 || '',
+                        image7: data.image7 || '',
+                        image8: data.image8 || '',
+                        image9: data.image9 || '',
+                        image10: data.image10 || '',
+                        // No incluimos stock ya que no es necesario
+                        active: data.active !== undefined ? data.active : true
+                    };
+                    allProducts.push(productData);
+                    console.log('📦 Producto cargado:', productData.title);
                 });
 
+                console.log(`🎉 Total productos cargados: ${allProducts.length}`);
+                
                 renderProductsTable(allProducts);
                 updateStats();
+                
+                // Mostrar información de diagnóstico
+                if (allProducts.length === 0) {
+                    showError('No se encontraron productos en la base de datos.');
+                } else {
+                    showSuccess(`${allProducts.length} productos cargados correctamente`);
+                }
             } catch (error) {
-                console.error('Error al cargar productos:', error);
-                showError('Error al cargar productos');
+                console.error('❌ Error al cargar productos:', error);
+                console.error('❌ Detalles del error:', {
+                    message: error.message,
+                    code: error.code,
+                    name: error.name
+                });
+                showError(`Error al cargar productos: ${error.message}`);
             }
         }
 
@@ -950,9 +1170,15 @@
             if (products.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
                             <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 10px; display: block; opacity: 0.3;"></i>
-                            No se encontraron productos
+                            <h3>No se encontraron productos</h3>
+                            <p>No hay productos en la base de datos.</p>
+                            <div style="margin-top: 20px;">
+                                <button class="btn btn-success" onclick="switchTab('add')">
+                                    <i class="fas fa-plus"></i> Agregar Primer Producto
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -962,11 +1188,12 @@
             tbody.innerHTML = products.map(product => `
                 <tr>
                     <td>
-                        <img src="${product.image}" alt="${product.title}" onerror="this.src='https://via.placeholder.com/60'">
+                        <img src="${product.image || 'https://via.placeholder.com/60'}" alt="${product.title}" onerror="this.src='https://via.placeholder.com/60'">
                     </td>
                     <td>
                         <div style="font-weight: 600;">${product.title}</div>
                         <small style="color: #666;">${product.description ? product.description.substring(0, 50) + '...' : 'Sin descripción'}</small>
+                        ${product.sagitario ? `<br><small style="color: #007bff; font-weight: 500;">📱 ${product.sagitario}</small>` : ''}
                     </td>
                     <td>
                         <span style="background: #e9ecef; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem;">
@@ -974,18 +1201,13 @@
                         </span>
                     </td>
                     <td>
-                        <div style="font-weight: 600;">$${product.price.toFixed(2)}</div>
-                        ${product.promotionalPrice ? `<small style="color: #28a745;">Oferta: $${product.promotionalPrice.toFixed(2)}</small>` : ''}
+                        <div style="font-weight: 600;">S/${Number(product.price || 0).toFixed(2)}</div>
+                        ${product.promotionalPrice ? `<small style="color: #28a745;">Oferta: S/${Number(product.promotionalPrice).toFixed(2)}</small>` : ''}
                     </td>
                     <td>
-                        <span style="color: ${product.stock < 10 ? '#dc3545' : '#28a745'}; font-weight: 600;">
-                            ${product.stock}
-                        </span>
-                    </td>
-                    <td>
-                        <span style="color: ${product.active ? '#28a745' : '#dc3545'};">
+                        <span style="color: ${product.active !== false ? '#28a745' : '#dc3545'};">
                             <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
-                            ${product.active ? 'Activo' : 'Inactivo'}
+                            ${product.active !== false ? 'Activo' : 'Inactivo'}
                         </span>
                     </td>
                     <td>
@@ -1007,7 +1229,8 @@
 
             const filtered = allProducts.filter(product => {
                 const matchesSearch = product.title.toLowerCase().includes(searchTerm) ||
-                                    product.description.toLowerCase().includes(searchTerm);
+                                    (product.description && product.description.toLowerCase().includes(searchTerm)) ||
+                                    (product.sagitario && product.sagitario.toLowerCase().includes(searchTerm));
                 const matchesCategory = !categoryTerm || product.category === categoryTerm;
                 
                 return matchesSearch && matchesCategory;
@@ -1020,13 +1243,13 @@
         function updateStats() {
             const totalProducts = allProducts.length;
             const categories = [...new Set(allProducts.map(p => p.category))];
-            const totalStock = allProducts.reduce((sum, p) => sum + (p.stock || 0), 0);
-            const lowStock = allProducts.filter(p => (p.stock || 0) < 10).length;
+            const brands = [...new Set(allProducts.map(p => p.sagitario).filter(b => b))];
+            const activeProducts = allProducts.filter(p => p.active !== false).length;
 
             document.getElementById('totalProducts').textContent = totalProducts;
             document.getElementById('totalCategories').textContent = categories.length;
-            document.getElementById('totalStock').textContent = totalStock;
-            document.getElementById('lowStock').textContent = lowStock;
+            document.getElementById('totalBrands').textContent = brands.length;
+            document.getElementById('activeProducts').textContent = activeProducts;
         }
 
         // Editar producto
@@ -1043,15 +1266,43 @@
             document.getElementById('category').value = product.category;
             document.getElementById('price').value = product.price;
             document.getElementById('promotionalPrice').value = product.promotionalPrice || '';
-            document.getElementById('stock').value = product.stock || 0;
+            document.getElementById('sagitario').value = product.sagitario || '';
 
-            // Mostrar imagen actual
-            const preview = document.getElementById('imagePreview');
-            if (product.image && product.image !== 'https://via.placeholder.com/300x200?text=Sin+Imagen') {
-                preview.style.backgroundImage = `url(${product.image})`;
-                preview.classList.add('has-image');
-                preview.innerHTML = '';
+            // Mostrar imágenes actuales
+            for (let i = 1; i <= 10; i++) {
+                const imageKey = i === 1 ? 'image' : `image${i}`;
+                const preview = document.getElementById(`imagePreview${i}`);
+                const imageUrl = product[imageKey];
+                
+                if (imageUrl && imageUrl !== 'https://via.placeholder.com/300x200?text=Sin+Imagen') {
+                    preview.style.backgroundImage = `url(${imageUrl})`;
+                    preview.classList.add('has-image');
+                    preview.innerHTML = '';
+                } else {
+                    // Reset preview si no hay imagen
+                    preview.style.backgroundImage = '';
+                    preview.classList.remove('has-image');
+                    if (i === 1) {
+                        preview.innerHTML = `
+                            <div style="text-align: center; color: #666;">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                <div style="font-size: 0.8rem;">Imagen obligatoria</div>
+                                <small>JPG, PNG (máx. 5MB)</small>
+                            </div>
+                        `;
+                    } else {
+                        preview.innerHTML = `
+                            <div style="text-align: center; color: #666;">
+                                <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                                <div style="font-size: 0.8rem;">Opcional</div>
+                            </div>
+                        `;
+                    }
+                }
             }
+
+            // Limpiar archivos seleccionados
+            selectedImageFiles = {};
 
             // Actualizar botón
             document.getElementById('btnTextContent').textContent = 'Actualizar Producto';
@@ -1103,19 +1354,31 @@
             document.getElementById('editProductId').value = '';
             document.getElementById('btnTextContent').textContent = 'Agregar Producto';
             
-            // Resetear imagen
-            const preview = document.getElementById('imagePreview');
-            preview.style.backgroundImage = '';
-            preview.classList.remove('has-image');
-            preview.innerHTML = `
-                <div style="text-align: center; color: #666;">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                    <div>Haz clic para subir imagen</div>
-                    <small>JPG, PNG, GIF (máx. 5MB)</small>
-                </div>
-            `;
+            // Resetear todas las imágenes
+            for (let i = 1; i <= 10; i++) {
+                const preview = document.getElementById(`imagePreview${i}`);
+                preview.style.backgroundImage = '';
+                preview.classList.remove('has-image');
+                
+                if (i === 1) {
+                    preview.innerHTML = `
+                        <div style="text-align: center; color: #666;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                            <div style="font-size: 0.8rem;">Imagen obligatoria</div>
+                            <small>JPG, PNG (máx. 5MB)</small>
+                        </div>
+                    `;
+                } else {
+                    preview.innerHTML = `
+                        <div style="text-align: center; color: #666;">
+                            <i class="fas fa-plus" style="font-size: 1.5rem; margin-bottom: 5px; display: block;"></i>
+                            <div style="font-size: 0.8rem;">Opcional</div>
+                        </div>
+                    `;
+                }
+            }
             
-            selectedImageFile = null;
+            selectedImageFiles = {};
             editingProduct = null;
         }
 
@@ -1172,6 +1435,58 @@
                 btnLoading.style.display = 'none';
                 submitBtn.disabled = false;
             }
+        }
+
+        // Función para descargar productos en Excel
+        function downloadExcel() {
+            if (allProducts.length === 0) {
+                showError('No hay productos para exportar');
+                return;
+            }
+
+            // Preparar datos para Excel (sin imágenes)
+            const excelData = allProducts.map(product => ({
+                'ID': product.id,
+                'Nombre': product.title,
+                'Descripción': product.description || '',
+                'Categoría': product.category,
+                'Precio Regular': product.price ? `S/${product.price.toFixed(2)}` : '',
+                'Precio Promocional': product.promotionalPrice ? `S/${product.promotionalPrice.toFixed(2)}` : '',
+                'Marca': product.sagitario || '',
+                'Estado': product.active !== false ? 'Activo' : 'Inactivo',
+                'Fecha Creación': product.createdAt ? new Date(product.createdAt.seconds * 1000).toLocaleDateString() : '',
+                'Creado Por': product.createdBy || '',
+                'Última Actualización': product.updatedAt ? new Date(product.updatedAt.seconds * 1000).toLocaleDateString() : '',
+                'Actualizado Por': product.updatedBy || ''
+            }));
+
+            // Convertir a CSV
+            const headers = Object.keys(excelData[0]);
+            const csvContent = [
+                headers.join(','),
+                ...excelData.map(row => 
+                    headers.map(header => {
+                        const value = row[header] || '';
+                        // Escapar comillas y comas
+                        return `"${value.toString().replace(/"/g, '""')}"`;
+                    }).join(',')
+                )
+            ].join('\n');
+
+            // Crear y descargar archivo
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const today = new Date().toISOString().split('T')[0];
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `productos_sagitario_${today}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showSuccess(`Productos exportados exitosamente (${allProducts.length} productos)`);
         }
 
         console.log('🚀 Panel de administración cargado correctamente');

@@ -8,35 +8,56 @@ export class FirebaseService {
     }
 
     async initialize() {
-        if (this.initialized) return this.db;
+        if (this.initialized) {
+            console.log('🔄 Firebase already initialized');
+            return this.db;
+        }
         
         try {
+            console.log('🚀 Initializing Firebase service...');
+            
             // Verificar si Firebase ya está cargado
             if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
+                console.log('✅ Firebase SDK already loaded, using existing instance');
                 this.db = firebase.firestore();
                 this.initialized = true;
                 return this.db;
             }
 
             // Cargar Firebase SDK dinámicamente
-            await this.loadFirebaseSDK();            // Inicializar Firebase
+            console.log('📦 Loading Firebase SDK...');
+            await this.loadFirebaseSDK();
+            
+            console.log('⚙️ Initializing Firebase app...');
+            // Inicializar Firebase
             const app = firebase.initializeApp(firebaseConfig);
             this.db = firebase.firestore();
             this.initialized = true;
             
+            console.log('✅ Firebase initialized successfully');
+            console.log('🔧 Firebase config:', { 
+                projectId: firebaseConfig.projectId,
+                authDomain: firebaseConfig.authDomain 
+            });
+            
             return this.db;
         } catch (error) {
-            console.error('Error initializing Firebase:', error);
-            throw error;
+            console.error('❌ Error initializing Firebase:', error);
+            console.error('❌ Firebase config:', firebaseConfig);
+            throw new Error(`Failed to initialize Firebase: ${error.message}`);
         }
     }
 
     async loadFirebaseSDK() {
+        console.log('📥 Loading Firebase App SDK...');
         // Cargar Firebase App
         await this.loadScript('https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js');
+        console.log('✅ Firebase App SDK loaded');
         
+        console.log('📥 Loading Firestore SDK...');
         // Cargar Firestore
         await this.loadScript('https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js');
+        console.log('✅ Firestore SDK loaded');
     }
 
     loadScript(src) {
@@ -57,27 +78,33 @@ export class FirebaseService {
 
     async getProducts() {
         if (!this.db) {
-            throw new Error('Firebase not initialized');
+            throw new Error('Firebase not initialized. Call initialize() first.');
         }
 
+        console.log('🔍 Searching for products in Firebase collections...');
         const possibleCollections = ['productos', 'products', 'items', 'product'];
         
         for (const collectionName of possibleCollections) {
             try {
+                console.log(`🔎 Checking collection: ${collectionName}`);
                 const testSnapshot = await this.db.collection(collectionName).limit(1).get();
                 if (!testSnapshot.empty) {
+                    console.log(`✅ Found products in collection: ${collectionName}`);
                     const snapshot = await this.db.collection(collectionName).get();
-                    return snapshot.docs.map(doc => ({
+                    const products = snapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     }));
+                    console.log(`📦 Retrieved ${products.length} products from ${collectionName}`);
+                    return products;
                 }
             } catch (error) {
+                console.warn(`⚠️ Error checking collection ${collectionName}:`, error.message);
                 continue;
             }
         }
         
-        throw new Error('No products collection found');
+        throw new Error(`No products found in any of these collections: ${possibleCollections.join(', ')}`);
     }
 
     async getProductById(productId) {

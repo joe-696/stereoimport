@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Conexión Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Prueba de Conexión Firebase</h1>
+        <p>Esta página ayuda a diagnosticar problemas de conexión con Firebase.</p>
+        
+        <div>
+            <button class="btn" onclick="testConnection()">🔍 Probar Conexión</button>
+            <button class="btn" onclick="listCollections()">📦 Listar Colecciones</button>
+            <button class="btn" onclick="testProducts()">🛍️ Probar Productos</button>
+            <button class="btn" onclick="clearLog()">🧹 Limpiar Log</button>
+        </div>
+        
+        <div id="log" class="log">Presiona un botón para comenzar las pruebas...</div>
+        
+        <h3>Información del Sistema:</h3>
+        <ul>
+            <li><strong>User Agent:</strong> <span id="userAgent"></span></li>
+            <li><strong>Cookies Habilitadas:</strong> <span id="cookiesEnabled"></span></li>
+            <li><strong>Local Storage:</strong> <span id="localStorage"></span></li>
+            <li><strong>CORS:</strong> <span id="corsInfo"></span></li>
+        </ul>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            connectFirestoreEmulator
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+            authDomain: "sagitariojbl1.firebaseapp.com",
+            projectId: "sagitariojbl1",
+            storageBucket: "sagitariojbl1.firebasestorage.app",
+            messagingSenderId: "424267774202",
+            appId: "1:424267774202:web:0be71a6adeacfe434f3143"
+        };
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Elementos DOM
+        const logElement = document.getElementById('log');
+
+        // Función para escribir en el log
+        function writeLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colorClass = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info';
+            logElement.innerHTML += `<span class="${colorClass}">[${timestamp}] ${message}</span>\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Probar conexión básica
+        window.testConnection = async function() {
+            writeLog('🔄 Iniciando prueba de conexión...', 'info');
+            
+            try {
+                writeLog('📋 Configuración Firebase:', 'info');
+                writeLog(`   Project ID: ${firebaseConfig.projectId}`, 'info');
+                writeLog(`   Auth Domain: ${firebaseConfig.authDomain}`, 'info');
+                
+                writeLog('🔍 Intentando acceder a Firestore...', 'info');
+                
+                // Prueba simple de acceso
+                const testRef = collection(db, '__test__');
+                const testSnap = await getDocs(testRef);
+                
+                writeLog('✅ Conexión a Firestore exitosa!', 'success');
+                writeLog(`📊 Documentos en colección test: ${testSnap.size}`, 'info');
+                
+            } catch (error) {
+                writeLog(`❌ Error de conexión: ${error.message}`, 'error');
+                writeLog(`   Código: ${error.code || 'N/A'}`, 'error');
+                writeLog(`   Detalles: ${error.stack}`, 'error');
+            }
+        };
+
+        // Listar todas las colecciones posibles
+        window.listCollections = async function() {
+            writeLog('📦 Buscando colecciones de productos...', 'info');
+            
+            const possibleCollections = [
+                'products', 'productos', 'items', 'product', 
+                'Products', 'Productos', 'PRODUCTS'
+            ];
+            
+            for (const collName of possibleCollections) {
+                try {
+                    writeLog(`🔍 Verificando colección: ${collName}`, 'info');
+                    const collRef = collection(db, collName);
+                    const snapshot = await getDocs(collRef);
+                    
+                    if (snapshot.size > 0) {
+                        writeLog(`✅ Encontrada: "${collName}" - ${snapshot.size} documentos`, 'success');
+                        
+                        // Mostrar el primer documento como ejemplo
+                        const firstDoc = snapshot.docs[0];
+                        const data = firstDoc.data();
+                        writeLog(`   Ejemplo: ${JSON.stringify(data, null, 2)}`, 'info');
+                        
+                        // Mostrar todos los campos disponibles
+                        writeLog(`   Campos: ${Object.keys(data).join(', ')}`, 'info');
+                    } else {
+                        writeLog(`⚠️ Colección "${collName}" existe pero está vacía`, 'warning');
+                    }
+                    
+                } catch (error) {
+                    writeLog(`❌ Error con "${collName}": ${error.message}`, 'error');
+                }
+            }
+        };
+
+        // Probar específicamente productos
+        window.testProducts = async function() {
+            writeLog('🛍️ Probando carga de productos...', 'info');
+            
+            try {
+                // Intentar cargar productos con diferentes estrategias
+                const strategies = [
+                    { name: 'products (ordenado)', collection: 'products', ordered: true },
+                    { name: 'products (sin orden)', collection: 'products', ordered: false },
+                    { name: 'productos (ordenado)', collection: 'productos', ordered: true },
+                    { name: 'productos (sin orden)', collection: 'productos', ordered: false }
+                ];
+                
+                for (const strategy of strategies) {
+                    try {
+                        writeLog(`🔄 Estrategia: ${strategy.name}`, 'info');
+                        
+                        const collRef = collection(db, strategy.collection);
+                        const snapshot = await getDocs(collRef);
+                        
+                        writeLog(`✅ Éxito: ${snapshot.size} productos encontrados`, 'success');
+                        
+                        if (snapshot.size > 0) {
+                            // Mostrar detalles de productos
+                            snapshot.docs.slice(0, 3).forEach((doc, index) => {
+                                const data = doc.data();
+                                writeLog(`   Producto ${index + 1}: ${data.title || data.name || 'Sin título'}`, 'info');
+                                writeLog(`     ID: ${doc.id}`, 'info');
+                                writeLog(`     Precio: ${data.price || 'N/A'}`, 'info');
+                            });
+                            
+                            // Esta estrategia funcionó, no necesitamos probar más
+                            break;
+                        }
+                        
+                    } catch (error) {
+                        writeLog(`❌ Falló ${strategy.name}: ${error.message}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                writeLog(`❌ Error general: ${error.message}`, 'error');
+            }
+        };
+
+        // Limpiar log
+        window.clearLog = function() {
+            logElement.innerHTML = 'Log limpiado...\n';
+        };
+
+        // Información del sistema
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userAgent').textContent = navigator.userAgent;
+            document.getElementById('cookiesEnabled').textContent = navigator.cookieEnabled ? 'Sí' : 'No';
+            
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                document.getElementById('localStorage').textContent = 'Disponible';
+            } catch (e) {
+                document.getElementById('localStorage').textContent = 'No disponible';
+            }
+            
+            document.getElementById('corsInfo').textContent = 'Verificando en las pruebas...';
+            
+            writeLog('🚀 Sistema de diagnóstico listo', 'success');
+            writeLog('💡 Presiona los botones para ejecutar las pruebas', 'info');
+        });
+    </script>
+</body>
+</html>

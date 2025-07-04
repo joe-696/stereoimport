@@ -129,20 +129,46 @@ export class ProductManager {
         }
     }    // Load products from Firebase
     async loadProducts() {
+        console.log('🔄 ProductManager: Starting to load products...');
         this.showSkeleton();
+        
         try {
+            // Verificar si Firebase está inicializado
+            console.log('🔍 ProductManager: Checking Firebase initialization...');
+            if (!firebaseService.initialized) {
+                console.log('⚠️ ProductManager: Firebase not initialized, attempting to initialize...');
+                await firebaseService.initialize();
+            }
+            
+            console.log('🔍 ProductManager: Firebase initialized, fetching products...');
             this.allProducts = await firebaseService.getProducts();
-            console.log(`✅ Loaded ${this.allProducts.length} products`);
+            
+            console.log(`✅ ProductManager: Loaded ${this.allProducts.length} products`);
+            console.log('📋 ProductManager: Sample product data:', this.allProducts[0] || 'No products found');
+            
             this.applyFilters();
+            
         } catch (error) {
-            console.error("Error al cargar productos:", error);
+            console.error("❌ ProductManager: Error loading products:", error);
+            console.error("❌ ProductManager: Error details:", {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
+            
+            // Mostrar un mensaje de error más informativo
             if (this.productsSection) {
                 this.productsSection.innerHTML = `
                     <div class="error-message">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
                         <h3>Error al cargar productos</h3>
-                        <p>No se pudieron cargar los productos. Por favor, inténtalo más tarde.</p>
+                        <p>No se pudieron cargar los productos desde Firebase.</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
                         <button onclick="window.location.reload()" class="btn btn-primary">
-                            Reintentar
+                            <i class="fas fa-sync-alt"></i> Reintentar
+                        </button>
+                        <button onclick="console.log('🔧 Debug info:', { firebaseService, error: '${error.message}' })" class="btn btn-secondary" style="margin-left: 10px;">
+                            <i class="fas fa-bug"></i> Debug Info
                         </button>
                     </div>
                 `;
