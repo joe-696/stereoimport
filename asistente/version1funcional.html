@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente de Productos - Stereo Import</title>
+  <style>
+    :root {
+      /* Variables de color - modo claro */
+      --bg-color: #f8f9fa;
+      --chat-bg: white;
+      --text-color: #333;
+      --header-bg: #0066cc;
+      --header-text: white;
+      --input-bg: white;
+      --input-border: #ddd;
+      --user-msg-bg: #0084ff;
+      --user-msg-color: white;
+      --bot-msg-bg: #f1f0f0;
+      --bot-msg-color: #333;
+      --card-bg: white;
+      --card-border: #e0e0e0;
+      --price-bg: linear-gradient(45deg, #28a745, #20c997);
+      --promo-bg: linear-gradient(45deg, #dc3545, #fd7e14);
+      --detail-btn-bg: linear-gradient(45deg, #0066cc, #0099ff);
+      --shadow-color: rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --chat-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --header-bg: #1a1a2e;
+      --header-text: #f0f0f0;
+      --input-bg: #2d2d2d;
+      --input-border: #444;
+      --user-msg-bg: #0057a3;
+      --user-msg-color: white;
+      --bot-msg-bg: #2a2a2a;
+      --bot-msg-color: #e0e0e0;
+      --card-bg: #2a2a2a;
+      --card-border: #444;
+      --price-bg: linear-gradient(45deg, #1b672b, #108469);
+      --promo-bg: linear-gradient(45deg, #a32532, #cc4d11);
+      --detail-btn-bg: linear-gradient(45deg, #0057a3, #0073cc);
+      --shadow-color: rgba(0,0,0,0.3);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      overflow: hidden;
+      transition: background-color 0.3s ease;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+      background-color: var(--chat-bg);
+      box-shadow: 0 2px 10px var(--shadow-color);
+      transition: background-color 0.3s ease;
+    }
+
+    .chat-header {
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      padding: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .reset-button {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .reset-button:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg-color);
+      transition: background-color 0.3s ease;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-radius: 18px;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background-color: var(--user-msg-bg);
+      color: var(--user-msg-color);
+      border-bottom-right-radius: 5px;
+    }
+
+    .bot-message {
+      align-self: flex-start;
+      background-color: var(--bot-msg-bg);
+      color: var(--bot-msg-color);
+      border-bottom-left-radius: 5px;
+      width: 85%;
+    }
+
+    .bot-message p {
+      margin: 0 0 10px 0;
+    }
+
+    .bot-message p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bot-message strong, .bot-message b {
+      font-weight: bold;
+      color: #0066cc;
+    }
+
+    .bot-message em, .bot-message i {
+      font-style: italic;
+    }
+
+    .bot-message ul, .bot-message ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .bot-message li {
+      margin-bottom: 5px;
+    }
+
+    .bot-message a {
+      color: #0066cc;
+      text-decoration: underline;
+    }
+
+    .bot-message h1, .bot-message h2, .bot-message h3 {
+      color: #0066cc;
+      margin: 10px 0 6px 0;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin: 10px 0;
+      padding: 15px;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--shadow-color);
+    }
+
+    .product-image {
+      width: 100%;
+      max-width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border: 1px solid var(--card-border);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      cursor: pointer;
+    }
+
+    .product-image:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #0066cc;
+      margin: 0 0 8px 0;
+      line-height: 1.3;
+    }
+
+    .product-brand {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .product-category {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .product-description {
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+
+    .product-price-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .product-price {
+      background: var(--price-bg);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .product-promo-price {
+      background: var(--promo-bg);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      animation: pulse-price 2s infinite;
+      box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    .product-original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+
+    .view-detail-btn {
+      background: var(--detail-btn-bg);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .view-detail-btn:hover {
+      filter: brightness(1.1);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+    }
+
+    .view-detail-btn i {
+      font-size: 16px;
+    }
+
+    @keyframes pulse-price {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .no-image-placeholder, .error-image {
+      width: 100%;
+      height: 150px;
+      background: linear-gradient(135deg, var(--bg-color), var(--card-border));
+      border: 2px dashed var(--card-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      color: var(--text-color);
+      font-size: 14px;
+    }
+
+    .chat-input-container {
+      display: flex;
+      padding: 15px;
+      border-top: 1px solid var(--card-border);
+      background-color: var(--chat-bg);
+      transition: background-color 0.3s ease;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--input-border);
+      border-radius: 20px;
+      outline: none;
+      font-size: 14px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #send-button {
+      background-color: var(--header-bg);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #send-button:hover {
+      filter: brightness(1.1);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .loading-animation {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .loading-animation div {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--header-bg);
+      animation: loading-animation 1.2s linear infinite;
+    }
+    .loading-animation div:nth-child(1) {
+      top: 8px;
+      left: 8px;
+      animation-delay: 0s;
+    }
+    .loading-animation div:nth-child(2) {
+      top: 8px;
+      left: 32px;
+      animation-delay: -0.4s;
+    }
+    .loading-animation div:nth-child(3) {
+      top: 8px;
+      left: 56px;
+      animation-delay: -0.8s;
+    }
+    @keyframes loading-animation {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .price-highlight {
+      font-weight: bold;
+      color: #e63946;
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    [data-theme="dark"] .price-highlight {
+      background: #3d3522;
+    }
+
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .bot-message {
+        width: 95%;
+      }
+      
+      .product-card {
+        margin: 8px 0;
+      }
+      
+      .chat-header {
+        padding: 10px;
+      }
+      
+      .chat-input-container {
+        padding: 10px;
+      }
+      
+      #user-input {
+        padding: 10px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="chat-container">
+      <div class="chat-header">
+        <span id="status-text">Asistente de Stereo Import</span>
+        <div class="header-controls">
+          <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">
+            <i class="fas fa-sun"></i>
+          </button>
+          <button id="reset-chat" class="reset-button">Reiniciar</button>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div id="loading" class="loading">
+          <div class="loading-animation"><div></div><div></div><div></div></div>
+        </div>
+      </div>
+      <div class="chat-input-container">
+        <input type="text" id="user-input" placeholder="Escribe tu pregunta aquí..." disabled>
+        <button id="send-button" disabled>Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+
+  <script>
+    // Configuración y estado
+    const config = {
+      firebase: {
+        apiKey: "AIzaSyD5aX2lbcqvhAgG8EsJQf_MPH4tHZ5QH6Y",
+        authDomain: "sagitariojbl1.firebaseapp.com",
+        projectId: "sagitariojbl1",
+        storageBucket: "sagitariojbl1.firebasestorage.app",
+        messagingSenderId: "424267774202",
+        appId: "1:424267774202:web:0be71a6adeacfe434f3143"
+      },
+      gemini: {
+        apiKey: "AIzaSyC6gRlq2yRHasOND1AHD5heBdPzYMg1AII",
+        model: "gemini-2.0-flash"
+      }
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(config.firebase);
+    const db = firebase.firestore();
+
+    // Elementos DOM
+    const elements = {
+      chatMessages: document.getElementById('chat-messages'),
+      userInput: document.getElementById('user-input'),
+      sendButton: document.getElementById('send-button'),
+      loadingElement: document.getElementById('loading'),
+      statusText: document.getElementById('status-text'),
+      resetButton: document.getElementById('reset-chat'),
+      themeToggle: document.getElementById('theme-toggle')
+    };
+
+    // Estado de la aplicación
+    const state = {
+      products: [],
+      categories: [],
+      brands: [],
+      isInitialized: false,
+      conversation: []
+    };
+
+    // Configurar DOMPurify
+    DOMPurify.setConfig({
+      ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'u', 'p', 'br', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'span', 'div', 'a', 'img', 'button', 'i'],
+      ALLOWED_ATTR: ['class', 'id', 'href', 'target', 'src', 'alt', 'onerror', 'onload', 'onclick', 'data-id', 'data-product-id'],
+    });
+
+    // Función para redirigir a la página de detalles
+    function viewProductDetails(productId) {
+      window.open(`https://www.stereoimport.com/show/show.html?id=${productId}`, '_blank');
+    }
+
+    // Manejador de tema oscuro/claro
+    function setupThemeToggle() {
+      // Inicializar tema desde localStorage o por defecto claro
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+      
+      // Configurar evento de cambio de tema
+      elements.themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        updateThemeIcon(newTheme);
+      });
+    }
+    
+    function updateThemeIcon(theme) {
+      const icon = elements.themeToggle.querySelector('i');
+      if (theme === 'dark') {
+        icon.className = 'fas fa-moon';
+      } else {
+        icon.className = 'fas fa-sun';
+      }
+    }
+
+    // Crear tarjeta de producto
+    function createProductCard(product) {
+      const hasPromo = product.promotionalPrice && product.promotionalPrice < product.price;
+      
+      return `
+        <div class="product-card">
+          ${product.image ? 
+            `<img src="${product.image}" 
+                 alt="${product.title}" 
+                 class="product-image" 
+                 onclick="viewProductDetails('${product.id}')"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                 onload="this.nextElementSibling.style.display='none';">
+             <div class="error-image" style="display: none;">
+               📷 Imagen no disponible
+             </div>` :
+            `<div class="no-image-placeholder">
+               📷 Sin imagen disponible
+             </div>`
+          }
+          
+          <div class="product-title">${product.title}</div>
+          
+          ${product.sagitario ? 
+            `<div class="product-brand">🏷️ ${product.sagitario}</div>` : ''
+          }
+          
+          <div class="product-category">📂 ${product.category}</div>
+          
+          ${product.description ? 
+            `<div class="product-description">${product.description}</div>` : ''
+          }
+          
+          <div class="product-price-container">
+            ${hasPromo ? 
+              `<div class="product-promo-price">
+                 ✨ OFERTA: S/ ${product.promotionalPrice.toFixed(2)}
+               </div>
+               <div class="product-original-price">
+                 S/ ${product.price.toFixed(2)}
+               </div>` :
+              `<div class="product-price">
+                 💰 S/ ${product.price.toFixed(2)}
+               </div>`
+            }
+            
+            <button class="view-detail-btn" onclick="viewProductDetails('${product.id}')">
+              <i class="fas fa-search"></i> Ver detalle
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Buscar productos relevantes
+    function findRelevantProducts(query) {
+      const searchTerms = query.toLowerCase();
+      const searchWords = searchTerms.split(' ').filter(word => word.length > 2);
+      
+      const scoredProducts = state.products.map(product => {
+        let score = 0;
+        
+        // Título (peso alto)
+        if (product.title.toLowerCase().includes(searchTerms)) score += 50;
+        searchWords.forEach(word => {
+          if (product.title.toLowerCase().includes(word)) score += 15;
+        });
+        
+        // Marca (peso alto)
+        if (product.sagitario.toLowerCase().includes(searchTerms)) score += 30;
+        searchWords.forEach(word => {
+          if (product.sagitario.toLowerCase().includes(word)) score += 10;
+        });
+        
+        // Categoría (peso medio)
+        if (product.category.toLowerCase().includes(searchTerms)) score += 20;
+        searchWords.forEach(word => {
+          if (product.category.toLowerCase().includes(word)) score += 8;
+        });
+        
+        // Descripción (peso bajo)
+        if (product.description.toLowerCase().includes(searchTerms)) score += 10;
+        searchWords.forEach(word => {
+          if (product.description.toLowerCase().includes(word)) score += 3;
+        });
+        
+        return { product, score };
+      });
+      
+      return scoredProducts
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 4)
+        .map(item => item.product);
+    }
+
+    // Formatear markdown a HTML
+    function markdownToHtml(text) {
+      if (!text) return '';
+      
+      const lines = text.split('\n');
+      let inList = false;
+      let listType = '';
+      let html = '';
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        
+        if (line === '') {
+          if (!inList) html += '<br>';
+          continue;
+        }
+        
+        // Encabezados
+        if (line.startsWith('### ')) {
+          html += '<h3>' + escapePlainText(line.slice(4)) + '</h3>';
+          continue;
+        } else if (line.startsWith('## ')) {
+          html += '<h2>' + escapePlainText(line.slice(3)) + '</h2>';
+          continue;
+        } else if (line.startsWith('# ')) {
+          html += '<h1>' + escapePlainText(line.slice(2)) + '</h1>';
+          continue;
+        }
+        
+        // Listas
+        if (line.startsWith('* ') || line.startsWith('- ')) {
+          if (!inList || listType !== 'ul') {
+            if (inList) html += '</' + listType + '>';
+            html += '<ul>';
+            inList = true;
+            listType = 'ul';
+          }
+          html += '<li>' + formatInlineMarkdown(line.slice(2)) + '</li>';
+          continue;
+        } else if (/^\d+\.\s/.test(line)) {
+          if (!inList || listType !== 'ol') {
+            if (inList) html += '</' + listType + '>';
+            html += '<ol>';
+            inList = true;
+            listType = 'ol';
+          }
+          html += '<li>' + formatInlineMarkdown(line.replace(/^\d+\.\s/, '')) + '</li>';
+          continue;
+        } else if (inList) {
+          html += '</' + listType + '>';
+          inList = false;
+        }
+        
+        html += '<p>' + formatInlineMarkdown(line) + '</p>';
+      }
+      
+      if (inList) {
+        html += '</' + listType + '>';
+      }
+      
+      return html;
+    }
+    
+    function escapePlainText(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+    
+    function formatInlineMarkdown(text) {
+      let formatted = escapePlainText(text);
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      return formatted;
+    }
+
+    // Instrucciones para el asistente (prompt system)
+    const SYSTEM_PROMPT = `
+# INSTRUCCIONES PARA EL ASISTENTE DE STEREO IMPORT
+
+Eres el asistente virtual de Stereo Import, experto en marketing persuasivo para productos de audio en Perú.
+
+## ESTILO DE COMUNICACIÓN:
+- Sé CONCISO y DIRECTO - respuestas breves y poderosas
+- Habla como un EXPERTO EN MARKETING - persuasivo y convincente
+- Usa lenguaje EMOTIVO y ATRACTIVO: "impresionante", "excepcional"
+- Enfócate en BENEFICIOS principales, no en largas descripciones
+- Limita tus respuestas a 2-3 párrafos máximo
+- Evita excesivo texto o explicaciones técnicas complejas
+
+## FORMATO:
+- Usa **negritas** para destacar nombres de productos y características clave
+- Usa *cursivas* para beneficios principales
+- Utiliza listas cortas para enumerar opciones (máximo 3-4 puntos)
+- Muestra precios siempre como "S/ XX.XX"
+- Menciona que pueden ver más detalles en las tarjetas de productos
+
+## PRODUCTOS:
+- Cuando respondas sobre productos específicos, recomienda 2-3 opciones relevantes
+- Destaca promociones y ofertas especiales
+- Incentiva a hacer clic en "Ver detalle" para más información
+
+Objetivo: Convencer al cliente de forma eficiente con el mínimo texto necesario.
+`;
+
+    // Inicializar
+    function init() {
+      setupThemeToggle();
+      setupEventListeners();
+      initializeChat();
+    }
+
+    // Configurar event listeners
+    function setupEventListeners() {
+      elements.sendButton.addEventListener('click', handleUserMessage);
+      elements.userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleUserMessage();
+      });
+      elements.resetButton.addEventListener('click', resetChat);
+    }
+
+    // Inicializar chat
+    function initializeChat() {
+      elements.statusText.textContent = "Cargando productos...";
+      loadProducts().then(() => {
+        elements.loadingElement.style.display = 'none';
+        
+        const welcomeMessage = "👋 ¡Hola! Soy tu asistente de Stereo Import. ¿Buscas **audífonos**, **parlantes** o algún dispositivo de audio? ¡Dime qué necesitas!";
+        addBotMessage(welcomeMessage);
+        
+        state.conversation.push({
+          role: "assistant",
+          content: welcomeMessage
+        });
+        
+        elements.userInput.disabled = false;
+        elements.sendButton.disabled = false;
+        elements.statusText.textContent = "Asistente de Stereo Import";
+        state.isInitialized = true;
+      }).catch(error => {
+        elements.loadingElement.style.display = 'none';
+        const errorMessage = "❌ Lo siento, no pude cargar los productos. Error: " + error.message;
+        addBotMessage(errorMessage);
+        state.conversation.push({
+          role: "assistant",
+          content: errorMessage
+        });
+        elements.statusText.textContent = "Error de conexión";
+      });
+    }
+
+    // Resetear chat
+    function resetChat() {
+      state.conversation = [];
+      
+      while (elements.chatMessages.firstChild) {
+        elements.chatMessages.removeChild(elements.chatMessages.firstChild);
+      }
+      
+      const welcomeMessage = "👋 ¡Hola! Soy tu asistente de Stereo Import. ¿Buscas **audífonos**, **parlantes** o algún dispositivo de audio? ¡Dime qué necesitas!";
+      addBotMessage(welcomeMessage);
+      
+      state.conversation.push({
+        role: "assistant",
+        content: welcomeMessage
+      });
+    }
+
+    // Cargar productos
+    async function loadProducts() {
+      // Intentar desde localStorage primero
+      const cachedData = localStorage.getItem('stereoImportProducts');
+      if (cachedData) {
+        try {
+          const parsedData = JSON.parse(cachedData);
+          // Verificar si el caché es reciente (menos de 24 horas)
+          const cacheAge = Date.now() - parsedData.timestamp;
+          if (cacheAge < 24 * 60 * 60 * 1000) {
+            state.products = parsedData.products;
+            state.categories = parsedData.categories;
+            state.brands = parsedData.brands;
+            console.log("Datos cargados desde localStorage:", state.products.length + " productos");
+            return;
+          }
+        } catch (e) {
+          console.error("Error con localStorage:", e);
+        }
+      }
+
+      // Cargar desde Firebase
+      try {
+        console.log("Cargando productos desde Firebase...");
+        const querySnapshot = await db.collection('products').get();
+        
+        if (querySnapshot.empty) {
+          throw new Error("No se encontraron productos");
+        }
+
+        state.products = [];
+        const categoriesSet = new Set();
+        const brandsSet = new Set();
+
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          const product = {
+            id: doc.id,
+            title: data.title || 'Sin título',
+            description: data.description || '',
+            category: data.category || 'Sin categoría',
+            price: Number(data.price) || 0,
+            promotionalPrice: data.promotionalPrice ? Number(data.promotionalPrice) : null,
+            sagitario: data.sagitario || '',
+            image: data.image || '',
+            active: data.active !== undefined ? data.active : true
+          };
+
+          if (product.active) {
+            state.products.push(product);
+            if (product.category) categoriesSet.add(product.category);
+            if (product.sagitario) brandsSet.add(product.sagitario);
+          }
+        });
+
+        state.categories = Array.from(categoriesSet);
+        state.brands = Array.from(brandsSet);
+
+        console.log(`Cargados ${state.products.length} productos, ${state.categories.length} categorías y ${state.brands.length} marcas`);
+
+        // Guardar en cache
+        localStorage.setItem('stereoImportProducts', JSON.stringify({
+          products: state.products,
+          categories: state.categories,
+          brands: state.brands,
+          timestamp: Date.now()
+        }));
+
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+        throw error;
+      }
+    }
+
+    // Manejar mensaje del usuario
+    function handleUserMessage() {
+      const message = elements.userInput.value.trim();
+      if (!message) return;
+
+      addUserMessage(message);
+      
+      state.conversation.push({
+        role: "user",
+        content: message
+      });
+      
+      elements.userInput.value = '';
+      processUserMessage(message);
+    }
+
+    // Procesar mensaje y obtener respuesta
+    async function processUserMessage(message) {
+      try {
+        elements.userInput.disabled = true;
+        elements.sendButton.disabled = true;
+        
+        // Buscar productos relevantes
+        const relevantProducts = findRelevantProducts(message);
+        
+        // Preparar contexto
+        const productContext = `
+## PRODUCTOS DISPONIBLES:
+- ${state.products.length} productos
+- Categorías: ${state.categories.join(', ')}
+- Marcas: ${state.brands.join(', ')}
+
+${relevantProducts.length > 0 ? `
+## PRODUCTOS RELEVANTES ENCONTRADOS:
+${relevantProducts.map((p, index) => 
+  `${index + 1}. **${p.title}**
+   - Marca: ${p.sagitario}
+   - Categoría: ${p.category}
+   - Precio: S/ ${p.price.toFixed(2)}${p.promotionalPrice ? ` (OFERTA: S/ ${p.promotionalPrice.toFixed(2)})` : ''}`
+).join('\n\n')}
+
+NOTA: Estos productos se mostrarán automáticamente con sus imágenes.` : 
+`(No se encontraron productos específicos para esta consulta)`}
+
+RECUERDA: Sé breve y persuasivo. Máximo 2-3 párrafos en total.
+`;
+
+        // Mensaje temporal de carga
+        const loadingMessageElement = addBotMessage("Buscando productos para ti...");
+
+        // Preparar historial de conversación reciente (últimas 4 interacciones)
+        let conversationHistory = "";
+        const recentMessages = state.conversation.slice(-8);
+        for (const msg of recentMessages) {
+          conversationHistory += `${msg.role === "user" ? "Cliente" : "Vendedor"}: ${msg.content}\n\n`;
+        }
+
+        // Obtener respuesta de la API
+        try {
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${config.gemini.model}:generateContent?key=${config.gemini.apiKey}`;
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{ 
+                  text: `${SYSTEM_PROMPT}\n\n${productContext}\n\n## CONVERSACIÓN RECIENTE:\n${conversationHistory}\n\n## CONSULTA ACTUAL:\n${message}\n\n## TU RESPUESTA (BREVE Y PERSUASIVA):`
+                }]
+              }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 400, // Limitando longitud para respuestas concisas
+                topP: 0.95,
+                topK: 40
+              }
+            })
+          });
+
+          const data = await response.json();
+          
+          if (data.candidates && data.candidates.length > 0) {
+            const botResponse = data.candidates[0].content.parts[0].text;
+            updateBotMessage(loadingMessageElement, botResponse);
+            
+            // Mostrar tarjetas de productos
+            if (relevantProducts.length > 0) {
+              showProductCards(relevantProducts);
+            }
+            
+            // Guardar en historial
+            state.conversation.push({
+              role: "assistant",
+              content: botResponse
+            });
+          } else {
+            throw new Error("No se recibió respuesta válida de la API");
+          }
+        } catch (apiError) {
+          console.error("Error con la API:", apiError);
+          
+          // Respuesta alternativa si falla la API
+          const fallbackResponse = "¡Tengo excelentes opciones para ti! Revisa las tarjetas de productos a continuación. Puedes hacer clic en 'Ver detalle' para más información.";
+          updateBotMessage(loadingMessageElement, fallbackResponse);
+          
+          if (relevantProducts.length > 0) {
+            showProductCards(relevantProducts);
+          }
+          
+          state.conversation.push({
+            role: "assistant",
+            content: fallbackResponse
+          });
+        }
+        
+        // Rehabilitar input
+        elements.userInput.disabled = false;
+        elements.sendButton.disabled = false;
+        elements.userInput.focus();
+        
+      } catch (error) {
+        console.error("Error general:", error);
+        const errorMessage = "Lo siento, ocurrió un error. Por favor intenta de nuevo.";
+        addBotMessage(errorMessage);
+        
+        state.conversation.push({
+          role: "assistant",
+          content: errorMessage
+        });
+        
+        elements.userInput.disabled = false;
+        elements.sendButton.disabled = false;
+      }
+    }
+
+    // Mostrar tarjetas de productos
+    function showProductCards(products) {
+      const cardsContainer = document.createElement('div');
+      cardsContainer.className = 'message bot-message';
+      cardsContainer.style.maxWidth = '95%';
+      cardsContainer.style.width = '95%';
+      
+      const cardsHtml = `
+        <div class="products-grid">
+          ${products.map(product => createProductCard(product)).join('')}
+        </div>
+      `;
+      
+      cardsContainer.innerHTML = DOMPurify.sanitize(cardsHtml);
+      elements.chatMessages.appendChild(cardsContainer);
+      // Eliminada la línea de desplazamiento automático
+    }
+
+    // Obtener productos aleatorios
+    function getRandomProductExamples(count) {
+      if (state.products.length <= count) {
+        return state.products;
+      }
+      const shuffled = [...state.products].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    // Agregar mensaje del usuario al chat
+    function addUserMessage(text) {
+      const messageElement = document.createElement('div');
+      messageElement.className = 'message user-message';
+      messageElement.textContent = text;
+      elements.chatMessages.appendChild(messageElement);
+      // Eliminada la línea de desplazamiento automático
+    }
+
+    // Agregar mensaje del bot al chat
+    function addBotMessage(text) {
+      const messageElement = document.createElement('div');
+      messageElement.className = 'message bot-message';
+      
+      let htmlContent = markdownToHtml(text);
+      const cleanHtml = DOMPurify.sanitize(htmlContent);
+      
+      const htmlWithPriceHighlights = cleanHtml.replace(
+        /(S\/\s*\d+(\.\d{1,2})?)/g, 
+        '<span class="price-highlight">$1</span>'
+      );
+      
+      messageElement.innerHTML = htmlWithPriceHighlights;
+      elements.chatMessages.appendChild(messageElement);
+      // Eliminada la línea de desplazamiento automático
+      return messageElement;
+    }
+
+    // Actualizar mensaje del bot
+    function updateBotMessage(element, text) {
+      let htmlContent = markdownToHtml(text);
+      const cleanHtml = DOMPurify.sanitize(htmlContent);
+      
+      const htmlWithPriceHighlights = cleanHtml.replace(
+        /(S\/\s*\d+(\.\d{1,2})?)/g, 
+        '<span class="price-highlight">$1</span>'
+      );
+      
+      element.innerHTML = htmlWithPriceHighlights;
+      // Eliminada la línea de desplazamiento automático
+    }
+
+    // Iniciar la aplicación
+    init();
+  </script>
+</body>
+</html>

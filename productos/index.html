@@ -571,6 +571,183 @@
             }, 3000); // *** DURACIÓN TOTAL: 3 SEGUNDOS EXACTOS ***
         });
     </script>
+
+    <!-- Chat Interactivo Flotante -->
+    <div class="chat-container">
+        <div class="chat-label" id="chatLabel">¿Necesitas ayuda?</div>
+        <div class="chat-button" id="chatButton">
+            <div class="notification-badge">1</div>
+            <i class="fas fa-comment-dots"></i>
+        </div>
+    </div>
+
+    <style>
+        /* === ESTILOS PARA EL CHAT FLOTANTE INTERACTIVO === */
+        .chat-container {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .chat-label {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: relative;
+            animation: show-label 0.6s ease forwards;
+            max-width: 250px;
+            text-align: center;
+        }
+
+        .chat-label::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 25px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #2c3e50;
+        }
+
+        .chat-button {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 6px 22px rgba(0, 114, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            animation: pulse-chat 2.5s infinite;
+            border: none;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 28px rgba(0, 114, 255, 0.7);
+            animation-play-state: paused;
+        }
+
+        .chat-button i {
+            font-size: 30px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
+            background-color: #ff3b30;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        @keyframes show-label {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-chat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-container {
+                right: 20px;
+                top: 45%;
+            }
+            
+            .chat-label {
+                max-width: 200px;
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+            
+            .chat-button {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .chat-button i {
+                font-size: 26px;
+            }
+        }
+    </style>
+
+    <script>
+        // === SCRIPT PARA EL CHAT INTERACTIVO ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatButton = document.getElementById('chatButton');
+            const chatLabel = document.getElementById('chatLabel');
+
+            const mensajes = [
+                "¿Tienes dudas? ¡Chatea ahora con nuestro asistente!",
+                "Resolvemos tus preguntas en segundos 🤖💬",
+                "¿No estás seguro? ¡Te ayudamos a decidir!",
+                "Asistencia instantánea para tu compra ✔️",
+                "¡Habla ahora con un asistente inteligente!",
+                "Compra con confianza, estamos aquí para ayudarte 🛒",
+                "¿Necesitas ayuda antes de pagar? Escríbenos",
+                "Agente IA disponible 24/7 para ti 🤝",
+                "Haz clic y recibe atención al instante ⚡",
+                "¿Te acompañamos en tu compra? Haz clic aquí"
+            ];
+
+            let index = 0;
+
+            // Cambiar mensajes cada 4 segundos
+            setInterval(() => {
+                chatLabel.style.opacity = '0';
+                chatLabel.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    index = (index + 1) % mensajes.length;
+                    chatLabel.textContent = mensajes[index];
+                    chatLabel.style.opacity = '1';
+                    chatLabel.style.transform = 'translateY(0)';
+                }, 300);
+            }, 4000);
+
+            // Evento de clic - redirigir a la carpeta asistente
+            chatButton.addEventListener('click', () => {
+                window.location.href = '../asistente/';
+            });
+        });
+    </script>
     
     <!-- Scripts originales -->
     <script type="module" src="js/main.js"></script>
