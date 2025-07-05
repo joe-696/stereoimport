@@ -131,6 +131,31 @@ export class FirebaseService {
         return null;
     }
 
+    async getCategories() {
+        if (!this.db) {
+            throw new Error('Firebase not initialized');
+        }
+
+        try {
+            console.log('🔍 Getting categories from Firebase...');
+            const snapshot = await this.db.collection('categories').get();
+            
+            const categories = snapshot.docs
+                .map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }))
+                .filter(category => category.active === true) // Filtrar en cliente
+                .sort((a, b) => (a.name || '').localeCompare(b.name || '')); // Ordenar en cliente
+            
+            console.log(`✅ Loaded ${categories.length} active categories`);
+            return categories;
+        } catch (error) {
+            console.error('❌ Error getting categories:', error);
+            throw error;
+        }
+    }
+
     async getRelatedProducts(category, excludeId, limit = 6) {
         if (!this.db) {
             throw new Error('Firebase not initialized');

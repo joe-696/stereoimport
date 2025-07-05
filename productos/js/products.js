@@ -19,6 +19,48 @@ export class ProductManager {
         console.log('🔗 CartManager linked to ProductManager');
     }
 
+    // Load categories from Firebase
+    async loadCategories() {
+        try {
+            console.log('🔄 Loading categories...');
+            const categories = await firebaseService.getCategories();
+            this.populateCategoryFilter(categories);
+        } catch (error) {
+            console.error('❌ Error loading categories:', error);
+            // En caso de error, dejar solo la opción "Todas las categorías"
+        }
+    }
+
+    // Load products data from Firebase
+    async loadProductsData() {
+        try {
+            console.log('🔄 Loading products data...');
+            this.allProducts = await firebaseService.getProducts();
+            console.log(`✅ Loaded ${this.allProducts.length} products`);
+        } catch (error) {
+            console.error('❌ Error loading products data:', error);
+            throw error;
+        }
+    }
+
+    // Populate category filter dropdown
+    populateCategoryFilter(categories) {
+        if (!this.categoryFilter) return;
+        
+        // Mantener la opción "Todas las categorías"
+        this.categoryFilter.innerHTML = '<option value="">Todas las categorías</option>';
+        
+        // Agregar las categorías dinámicamente
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.name;
+            option.textContent = category.name;
+            this.categoryFilter.appendChild(option);
+        });
+        
+        console.log(`✅ Populated category filter with ${categories.length} categories`);
+    }
+
     // Show skeleton loading
     showSkeleton() {
         if (this.productsSection) {
@@ -92,7 +134,7 @@ export class ProductManager {
     // Apply filters
     applyFilters() {
         const searchText = this.searchInput ? this.searchInput.value : "";
-        const selectedCategory = this.categoryFilter ? this.categoryFilter.value.toLowerCase() : "";
+        const selectedCategory = this.categoryFilter ? this.categoryFilter.value : "";
         let filteredProducts = this.allProducts;
         
         if (searchText) {
@@ -101,7 +143,7 @@ export class ProductManager {
         
         if (selectedCategory) {
             filteredProducts = filteredProducts.filter(product => 
-                product.category?.toLowerCase() === selectedCategory
+                product.category === selectedCategory
             );
         }
         
@@ -140,8 +182,13 @@ export class ProductManager {
                 await firebaseService.initialize();
             }
             
-            console.log('🔍 ProductManager: Firebase initialized, fetching products...');
-            this.allProducts = await firebaseService.getProducts();
+            console.log('🔍 ProductManager: Firebase initialized, fetching data...');
+            
+            // Cargar productos y categorías en paralelo
+            await Promise.all([
+                this.loadProductsData(),
+                this.loadCategories()
+            ]);
             
             console.log(`✅ ProductManager: Loaded ${this.allProducts.length} products`);
             console.log('📋 ProductManager: Sample product data:', this.allProducts[0] || 'No products found');
